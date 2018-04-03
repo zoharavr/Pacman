@@ -7,9 +7,6 @@ var pac_color;
 var start_time;
 var time_elapsed;    
 var interval;
-var userDB=[];
-
-Start();
 function User(user,password,first, last, email) {
     this.user_name=user;
     this.password=password;
@@ -18,12 +15,21 @@ function User(user,password,first, last, email) {
     this.email=email;
  //   this.bday=bday;
 }
+var deafult= new User("a","a");
+var userDB=[];
+userDB[0]=deafult;
+
+Start();
+
 $(document).ready(function(){ 
    $("#sign_in").click(function(){
        $("#form").toggle();
    });
 });
-
+function isEmail(email) {
+    var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return regex.test(email);
+  }
 // make the sign in
 $("#submit").click(function(){
     var user = $("#user_name").val();
@@ -31,8 +37,50 @@ $("#submit").click(function(){
     var first= $("#inputFName").val();
     var last= $("#inputLName").val();
     var mail= $("#inputEmail").val();
-    var userObj=new User(user,pass,first,last,mail);
+    //check if one of the fields is empty
+    if(user =='' || pass==''|| first==''|| last==''||mail=='' ){
+        alert("One of the fields is missing");
+    }
+    //check that the password contains at least 8 chars
+    else if(pass.length < 8){
+        alert("password must contain at least 8 characters");
+    }
+    else if(!/^[0-9a-zA-Z]{8,}$/.test(pass)){
+        alert("password must contain letters and numbers")
+    }
+    // check that first & last name doesn't contain digits
+    else if(/(?=.*\d)/.test(first) || /(?=.*\d)/.test(last)){
+        alert("please make sure that your first and last name doesn't contain any numbers");
+    }
+    else if(!isEmail(mail)){
+        alert("incorrect email");
+    }
+    else{
+        var userObj=new User(user,pass,first,last,mail);
+    }
 
+});
+$("#login").click(function(){
+    $("#login_form").toggle();
+});
+//login part - check that the user exists
+$("#confirm").click(function(){
+    var name=("#user_name_pass").val();
+    var pass=("#password_pass").val();
+    if(name !='' && pass!=''){
+        var flag=false;
+        for(u in userDB){
+            //to think if to add condition for the deafult user
+            if(name == u.user_name && pass == u.password){
+                flag=true;
+                break;
+            }
+        }
+        if(flag){
+            //show the board
+        }
+    }
+        else  alert("incorrect user name or password");
 });
 function Start() {
     board = new Array();
