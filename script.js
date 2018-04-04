@@ -56,7 +56,8 @@ $("#submit").click(function(){
         alert("incorrect email");
     }
     else{
-        var userObj=new User(user,pass,first,last,mail);
+        userDB.push(new User(user,pass,first,last,mail));
+        alert("your registration has been successfully completed");
     }
 
 });
@@ -65,22 +66,29 @@ $("#login").click(function(){
 });
 //login part - check that the user exists
 $("#confirm").click(function(){
-    var name=("#user_name_pass").val();
-    var pass=("#password_pass").val();
+    var name=$("#user_name_pass").val();
+    var pass=$("#password_pass").val();
     if(name !='' && pass!=''){
         var flag=false;
-        for(u in userDB){
+        //for(u in userDB){
+		for (var index=0; index<userDB.length; index++) {
+            var user=userDB[index];
             //to think if to add condition for the deafult user
-            if(name == u.user_name && pass == u.password){
+            if(name == user.user_name && pass == user.password){
                 flag=true;
                 break;
             }
         }
         if(flag){
+            //just for check (alert)
+            alert("start");
             //show the board
         }
+        else {
+            alert("incorrect user name or password");
+        } 
     }
-        else  alert("incorrect user name or password");
+      
 });
 function Start() {
     board = new Array();
