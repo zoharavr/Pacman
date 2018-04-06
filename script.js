@@ -7,6 +7,8 @@ var pac_color;
 var start_time;
 var time_elapsed;    
 var interval;
+var x;
+var firstTime=true;
 function User(user,password,first, last, email) {
     this.user_name=user;
     this.password=password;
@@ -20,7 +22,8 @@ var userDB=[];
 userDB[0]=deafult;
 
 Start();
-
+//about 
+Draw();
 $(document).ready(function(){ 
    $("#sign_in").click(function(){
        $("#form").toggle();
@@ -70,7 +73,6 @@ $("#confirm").click(function(){
     var pass=$("#password_pass").val();
     if(name !='' && pass!=''){
         var flag=false;
-        //for(u in userDB){
 		for (var index=0; index<userDB.length; index++) {
             var user=userDB[index];
             //to think if to add condition for the deafult user
@@ -82,7 +84,7 @@ $("#confirm").click(function(){
         if(flag){
             //just for check (alert)
             alert("start");
-            //show the board
+            Draw();
         }
         else {
             alert("incorrect user name or password");
@@ -135,6 +137,7 @@ function Start() {
     addEventListener("keyup", function (e) {
         keysDown[e.keyCode] = false;
     }, false);
+
     interval=setInterval(UpdatePosition, 250);
 }
 
@@ -166,6 +169,9 @@ function GetKeyPressed() {
 }
 
 function Draw() {
+    document.getElementById("board").style.display = "block";
+    document.getElementById("score").style.display = "block";
+    document.getElementById("welcome_screen").style.display = "none"; 
     canvas.width=canvas.width; //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
@@ -176,7 +182,28 @@ function Draw() {
             center.y = j * 60 + 30;
             if (board[i][j] == 2) {
                 context.beginPath();
-                context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
+                //up
+                if (x==1) {
+                    //context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); 
+                    context.arc(center.x, center.y, 30, (6/18)*Math.PI,(0/18)*Math.PI );
+                }
+                //down
+                else if (x==2) {
+                    //context.arc(center.x, center.y, 30,0.7 * Math.PI, 0.3 * Math.PI );
+                    context.arc(center.x, center.y, 30,0.7 * Math.PI, 0.3 * Math.PI );
+                }
+                //left
+                else if (x==3){
+                    context.arc(center.x, center.y, 30, 1.25*Math.PI, 0.7* Math.PI );
+                }
+                //right
+                else if (x==4){
+                    context.arc(center.x, center.y, 30, 0.5235987756, 5.7595865316 );
+                }
+                else if (firstTime) {
+                    context.arc(center.x, center.y, 30, 2.0943951024, 1.0471975512 ); 
+                    firstTime=false;
+                }
                 context.lineTo(center.x, center.y);
                 context.fillStyle = pac_color; //color 
                 context.fill();
@@ -204,9 +231,10 @@ function Draw() {
 
 function UpdatePosition() {
     board[shape.i][shape.j]=0;
-    var x = GetKeyPressed()
+     x = GetKeyPressed()
     if(x==1)
     {
+       
         if(shape.j>0 && board[shape.i][shape.j-1]!=4)
         {
             shape.j--;
