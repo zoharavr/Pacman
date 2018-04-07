@@ -21,10 +21,14 @@ var deafult= new User("a","a");
 var userDB=[];
 userDB[0]=deafult;
 
-Start();
+
 //about 
-Draw();
+//Draw();
 $(document).ready(function(){ 
+    $("#welcome_screen").css("display", "block");
+    $("#score").css("display", "none");
+    $("#board").css("display", "none");
+
    $("#sign_in").click(function(){
        $("#form").toggle();
    });
@@ -82,8 +86,7 @@ $("#confirm").click(function(){
             }
         }
         if(flag){
-            //just for check (alert)
-            alert("start");
+            Start();
             Draw();
         }
         else {
@@ -169,9 +172,10 @@ function GetKeyPressed() {
 }
 
 function Draw() {
-    document.getElementById("board").style.display = "block";
-    document.getElementById("score").style.display = "block";
-    document.getElementById("welcome_screen").style.display = "none"; 
+    $("#board").css("display", "block");
+    $("#score").css("display", "block");
+    $("#welcome_screen").css("display", "none");
+
     canvas.width=canvas.width; //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
@@ -185,8 +189,8 @@ function Draw() {
                 //up
                 if (x==1) {
                     //context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); 
-                    context.arc(center.x, center.y, 30, (6/18)*Math.PI,(0/18)*Math.PI );
-                }
+                    context.arc(center.x, center.y, 30,-0.33*Math.PI,1.4*Math.PI);
+                }//
                 //down
                 else if (x==2) {
                     //context.arc(center.x, center.y, 30,0.7 * Math.PI, 0.3 * Math.PI );
@@ -208,7 +212,7 @@ function Draw() {
                 context.fillStyle = pac_color; //color 
                 context.fill();
                 context.beginPath();
-                context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
+                context.arc(center.x + 14, center.y -13, 5, 0, 2 * Math.PI); // circle
                 context.fillStyle = "black"; //color 
                 context.fill();
             } else if (board[i][j] == 1) {
