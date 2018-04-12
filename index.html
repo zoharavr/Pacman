@@ -1,114 +1,141 @@
-    <!DOCTYPE html>
-    <html>
-        
-        <head>
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-            <link rel="stylesheet" type="text/css" href="style.css" />
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>            
-			<script type="text/javascript" src="http://livejs.com/live.js"></script>
-		</head>
-        
-        <body>
-                <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-                        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
-                        <nav class="my-2 my-md-0 mr-md-3">
-                          <a class="p-2 text-dark" href="#">Support</a>
-                          <a class="p-2 text-dark" href="#" data-toggle="modal" data-target="#exampleModalLong">About</a>
-                        </nav>
-                </div>
-				</p>
-            <div id="score">
-                SCORE:
-                <input id="lblScore" type="text" />
-                <br/>
-                TIME:
-                <input id="lblTime" type="text" />
-            </div>
-            <br/>
-            <div id="board" >
-                <canvas id="canvas" height="600" width="600"></canvas>
-            </div>
-            <div id="welcome_screen" class="container">
-                <button id="sign_in" type="button" class="btn btn-secondary btn-lg btn-block">Sign in</button>
-<!-- here starts the sign in form -->
-                <div id="form"  style="display: none;">
-                    <div class="row">
-                        <div class="col-sm-6">
-                                <label >Username</label>
-                                <input type="text" class="form-control" id="user_name" placeholder="Username">
-                        </div>
-                        <div class="col-sm-6">
-                                <label>Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="Password">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                                <label >First Name</label>
-                                <input type="text" class="form-control" id="inputFName" placeholder="First Name">
-                        </div>
-                        <div class="col-sm-6">
-                                <label >Last Name</label>
-                                <input type="text" class="form-control" id="inputLName" placeholder="Last Name">
-                        </div>
-                    </div>  
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label >Email address</label>
-                            <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                        </div>
-                        <div class="col-sm-6">
-                            <label >Birth date</label>
-                            <input id="date" class="form-control" type="date" value="2017-06-01">
-                        </div>
-                    </div>
-                        <div id="submit" class="row">
-                             <button type="submit" class="btn btn-dark">Submit</button>
-                        </div>
-                    </div>
-<!-- here the sign in form ends -->
-                    <button id="login" type="button" class="btn btn-secondary btn-lg btn-block">Login</button>
-                    <div id="login_form"  style="display: none;">
-                                    <label class="login" >Username</label>
-                                    <input type="text" class="form-control login" id="user_name_pass" placeholder="Username">
-                                    <label class="login" >Password</label>
-                                    <input type="password" class="form-control login" id="password_pass" placeholder="Password">
-                            <div id="submit" class="row">
-                                    <button id="confirm" type="submit" class="btn btn-dark">Login</button>
-                            </div>
-                    </div>
-                </div>
-          
-          
-<!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal Dialog</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        By: Zohar Avraham & Yosef Meltser 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://livejs.com/live.js"></script>
+</head>
+
+<body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="#">Support</a>
+            <a class="p-2 text-dark" href="#" data-toggle="modal" data-target="#exampleModalLong">About</a>
+        </nav>
     </div>
-  </div>
-</div>
-            <!-- Bootstrap core JavaScript
+    <div id="score">
+        SCORE:
+        <input id="lblScore" type="text" />
+        <br/> TIME:
+        <input id="lblTime" type="text" />
+    </div>
+    <br/>
+    <div id="board">
+        <canvas id="canvas" width="600" height="600"></canvas>
+    </div>
+    <div id="welcome_screen" class="container">
+        <button id="sign_in" type="button" class="btn btn-secondary btn-lg btn-block">Sign in</button>
+        <!-- here starts the sign in form -->
+        <div id="form" style="display: none;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label>Username</label>
+                    <input type="text" class="form-control" id="user_name" placeholder="Username">
+                </div>
+                <div class="col-sm-6">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label>First Name</label>
+                    <input type="text" class="form-control" id="inputFName" placeholder="First Name">
+                </div>
+                <div class="col-sm-6">
+                    <label>Last Name</label>
+                    <input type="text" class="form-control" id="inputLName" placeholder="Last Name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label>Email address</label>
+                    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="col-sm-6">
+                    <label>Birth date</label>
+                    <input id="date" class="form-control" type="date" value="2017-06-01">
+                </div>
+            </div>
+            <div id="submit" class="row">
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </div>
+        </div>
+        <!-- here the sign in form ends -->
+        <button id="login" type="button" class="btn btn-secondary btn-lg btn-block">Login</button>
+        <div id="login_form" style="display: none;">
+            <label class="login">Username</label>
+            <input type="text" class="form-control login" id="user_name_pass" placeholder="Username">
+            <label class="login">Password</label>
+            <input type="password" class="form-control login" id="password_pass" placeholder="Password">
+            <div id="submit" class="row">
+                <button id="confirm" type="submit" class="btn btn-dark">Login</button>
+            </div>
+        </div>
+    </div>
+    <div id="options_screen" style="display:none;">
+        <label>Choose how much to eat:</label>
+        <select class="custom-select">
+            <option selected value="50">50</option>
+            <option value="60">60</option>
+            <option value="70">70</option>
+            <option value="80">80</option>
+            <option value="90">90</option>
+        </select>
+        <label>Choose time of the game</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" value="1">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">minutes</span>
+            </div>
+        </div>
+        <label>Difficulty:</label>
+        <select class="custom-select">
+            <option selected value="1">1 Monseter - Easy</option>
+            <option value="2">2 Monseters - Medium</option>
+            <option value="3">3 Monseters - Hard</option>
+        </select>
+        <button id="btn_options" type="button" class="btn btn-success">Let's Go!</button>
+    </div>
+    <div class="footer">This footer will always be positioned at the bottom of the page, but
+        <strong>not fixed</strong>.</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal Dialog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    By: Zohar Avraham & Yosef Meltser
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript
             ================================================== -->
-            <!-- Placed at the end of the document so the pages load faster -->
-            <script type="text/javascript" src="script.js"></script>
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
 
-        </body>
+</body>
 
-    </html>
+</html>

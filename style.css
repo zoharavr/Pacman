@@ -10,15 +10,15 @@ canvas{
 .btn-group-lg>.btn, .btn-lg{
     margin-top:2%;
 }
-/* .footer {
+.footer {
     position: fixed;
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 1rem;
+    /* padding: 1rem; */
     background-color: #efefef;
     text-align: center;
-  } */
+  } 
   .form-group{
       margin: 0 auto;
       width: 50%;
@@ -36,4 +36,14 @@ canvas{
   .login{
       margin: 0 auto;
       width: 25%;
+  }
+  #options_screen{
+        margin: auto;
+        width: 40%;
+        border: 3px solid green;
+        padding: 10px;
+  }
+  #btn_options{
+      margin-left: 40%;
+      margin-top: 5%;
   }
