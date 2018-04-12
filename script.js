@@ -22,7 +22,7 @@ var deafult= new User("a","a");
 var userDB=[];
 userDB[0]=deafult;
 var lastmove;
-Start();
+//Start();
 //about 
 $(document).ready(function(){ 
     $("#welcome_screen").css("display", "block");
@@ -86,14 +86,22 @@ $("#confirm").click(function(){
             }
         }
         if(flag){
-            Start();
-            Draw();
+            $("#welcome_screen").css("display", "none");
+            $("#options_screen").css("display","block");
+
+         //   Start();
+         //   Draw();
         }
         else {
             alert("incorrect user name or password");
         } 
     }
       
+});
+$("#btn_options").click(function(){
+    $("#options_screen").css("display","none");
+    Start();
+    Draw();
 });
 function Start() {
     var audio = new Audio('pacman_beginning.WAV');
