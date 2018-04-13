@@ -34,8 +34,9 @@ canvas{
       width: 50%;
   }
   .login{
-      margin: 0 auto;
-      width: 25%;
+      margin-top: 5%;
+      margin-bottom: 5%;
+     /*  width: 25%; */
   }
   #options_screen{
         margin: auto;
@@ -46,4 +47,11 @@ canvas{
   #btn_options{
       margin-left: 40%;
       margin-top: 5%;
+  }
+  .upper{
+      height: 50%;
+      margin-left: 5%;
+  }
+  .cont{
+      margin: auto 0;
   }

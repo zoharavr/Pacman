@@ -1,4 +1,4 @@
-var lastState=0;
+var lastState = 0;
 const HighValue = 50;
 var context = document.getElementById("canvas").getContext("2d");
 var shape;
@@ -10,24 +10,28 @@ var start_time;
 var time_elapsed;
 var interval;
 var x;
+var lives = 3;
 var firstTime = true;
-function User(user, password, first, last, email) {
+function User(user, password, first, last, email, date) {
     this.user_name = user;
     this.password = password;
     this.firstName = first;
     this.lastName = last;
     this.email = email;
-    //   this.bday=bday;
+    this.bday = date;
 }
 var deafult = new User("a", "a");
+var current_user;
 var userDB = [];
 userDB[0] = deafult;
 var lastmove;
-Start();
+//Start();
 //about 
 $(document).ready(function () {
     $("#welcome_screen").css("display", "block");
+    $("#up_info").css("display", "none");
     $("#score").css("display", "none");
+    $("#time").css("display", "none");
     $("#board").css("display", "none");
 
     $("#sign_in").click(function () {
@@ -45,6 +49,7 @@ $("#submit").click(function () {
     var first = $("#inputFName").val();
     var last = $("#inputLName").val();
     var mail = $("#inputEmail").val();
+    var bday = $("#date").val();
     //check if one of the fields is empty
     if (user == '' || pass == '' || first == '' || last == '' || mail == '') {
         alert("One of the fields is missing");
@@ -64,7 +69,7 @@ $("#submit").click(function () {
         alert("incorrect email");
     }
     else {
-        userDB.push(new User(user, pass, first, last, mail));
+        userDB.push(new User(user, pass, first, last, mail, bday));
         alert("your registration has been successfully completed");
     }
 
@@ -83,6 +88,7 @@ $("#confirm").click(function () {
             //to think if to add condition for the deafult user
             if (name == user.user_name && pass == user.password) {
                 flag = true;
+                current_user = user.user_name;
                 break;
             }
         }
@@ -101,16 +107,20 @@ $("#btn_options").click(function () {
     Start();
     Draw();
 });
+
 function Start() {
+    $("#up_info").css("display", "block");
+    $("#lblLive").val(lives);
     var audio = new Audio('pacman_beginning.WAV');
     audio.play();
+    $("#lblName").val(current_user);
     board = new Array();
-    shape=new Object(); 
-    monster= new Object();
+    shape = new Object();
+    monster = new Object();
     score = 0;
     pac_color = "yellow";
     var cnt = 100;
-    var food_remain = 50;
+    var food_remain = $("#ball_num").val();
     var pacman_remain = 1;
     start_time = new Date();
     for (var i = 0; i < 10; i++) {
@@ -183,7 +193,24 @@ function findRandomEmptyCell(board) {
     }
     return [i, j];
 }
+function StartAfterStrike() {
+    $("#lblLive").val(lives);
+    var emptyCell = findRandomEmptyCell(board);
+    shape.i = emptyCell[0];
+    shape.j = emptyCell[1];
+    board[emptyCell[0]][emptyCell[1]] = 2;
+    keysDown = {};
+    addEventListener("keydown", function (e) {
+        keysDown[e.keyCode] = true;
+    }, false);
+    addEventListener("keyup", function (e) {
+        keysDown[e.keyCode] = false;
+    }, false);
 
+    //do every 250 ms
+    interval = setInterval(main, 250);
+
+}
 function GetKeyPressed() {
     if (keysDown[38]) {
         return 1;
@@ -198,12 +225,18 @@ function GetKeyPressed() {
         return 4;
     }
 }
-
+var stop = $("#minutes").val();
 function Draw() {
+    //needs to move from here
     $("#board").css("display", "block");
     $("#score").css("display", "block");
+    $("#time").css("display", "block");
     $("#welcome_screen").css("display", "none");
 
+    if (time_elapsed > (stop) * 60) {
+        alert("stop!");
+        window.clearInterval(interval);
+    }
     canvas.width = canvas.width; //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
@@ -234,7 +267,6 @@ function Draw() {
             }
         }
     }
-
 
 }
 function ghostUpdatePosition() {
@@ -305,12 +337,15 @@ function ghostUpdatePosition() {
             monster.i = monster.i + 1;
         }
 
-        lastState=board[monster.i][monster.j];
-        if (board[monster.i][monster.j]==2) {
+        lastState = board[monster.i][monster.j];
+        if (board[monster.i][monster.j] == 2) {
             window.clearInterval(interval);
             window.alert("loser!!!");
-            lastState=0;
-            Start();
+            lastState = 0;
+            lives--;
+            if (lives > 0) {
+                StartAfterStrike();
+            }
         }
         board[monster.i][monster.j] = 3;
         move = false;
@@ -351,10 +386,14 @@ function UpdatePosition() {
     if (board[shape.i][shape.j] == 1) {
         score++;
     }
-    if (board[shape.i][shape.j]==3) {
+    if (board[shape.i][shape.j] == 3) {
         window.clearInterval(interval);
         window.alert("loser!!!");
-        Start();
+        lives--;
+        if (lives > 0) {
+            StartAfterStrike();
+        }
+
     }
     board[shape.i][shape.j] = 2;
     var currentTime = new Date();
@@ -444,20 +483,19 @@ function drawpacman(center) {
     context.fillStyle = pac_color; //color 
     context.fill();
 }
+//help function that gets u the smallest move
 function indexOfMin(arr) {
     if (arr.length === 0) {
         return -1;
     }
-
     var min = arr[0];
     var minIndex = 0;
-
     for (var i = 1; i < arr.length; i++) {
         if (arr[i] < min) {
             minIndex = i;
             min = arr[i];
         }
     }
-
     return minIndex;
 }
+
