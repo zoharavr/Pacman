@@ -9,8 +9,11 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var p_5;
+var p_15;
+var p_25;
 var x;
-var lives = 3;
+var lifes = 3;
 var firstTime = true;
 function User(user, password, first, last, email, date) {
     this.user_name = user;
@@ -30,9 +33,8 @@ var lastmove;
 $(document).ready(function () {
     $("#welcome_screen").css("display", "block");
     $("#up_info").css("display", "none");
-    $("#score").css("display", "none");
-    $("#time").css("display", "none");
     $("#board").css("display", "none");
+    $("#exampleModalCenter").modal('hide');
 
     $("#sign_in").click(function () {
         $("#form").toggle();
@@ -104,13 +106,16 @@ $("#confirm").click(function () {
 });
 $("#btn_options").click(function () {
     $("#options_screen").css("display", "none");
+    p_5 = ($("#ball_num").val() * 0.6);
+    p_15 = ($("#ball_num").val() * 0.3);
+    p_25 = ($("#ball_num").val() * 0.1);
     Start();
     Draw();
 });
 
 function Start() {
     $("#up_info").css("display", "block");
-    $("#lblLive").val(lives);
+    $("#lblLive").val(lifes);
     var audio = new Audio('pacman_beginning.WAV');
     audio.play();
     $("#lblName").val(current_user);
@@ -194,7 +199,7 @@ function findRandomEmptyCell(board) {
     return [i, j];
 }
 function StartAfterStrike() {
-    $("#lblLive").val(lives);
+
     var emptyCell = findRandomEmptyCell(board);
     shape.i = emptyCell[0];
     shape.j = emptyCell[1];
@@ -229,10 +234,7 @@ var stop = $("#minutes").val();
 function Draw() {
     //needs to move from here
     $("#board").css("display", "block");
-    $("#score").css("display", "block");
-    $("#time").css("display", "block");
     $("#welcome_screen").css("display", "none");
-
     if (time_elapsed > (stop) * 60) {
         alert("stop!");
         window.clearInterval(interval);
@@ -251,7 +253,8 @@ function Draw() {
             } else if (board[i][j] == 1) {
                 context.beginPath();
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-                context.fillStyle = "black"; //color 
+                var color= BallsColor();
+                context.fillStyle =color; //color 
                 context.fill();
             }
             else if (board[i][j] == 4) {
@@ -342,10 +345,14 @@ function ghostUpdatePosition() {
             window.clearInterval(interval);
             window.alert("loser!!!");
             lastState = 0;
-            lives--;
-            if (lives > 0) {
+            lifes--;
+            if (lifes > 0) {
                 StartAfterStrike();
             }
+            else {
+                $("#exampleModalCenter").modal('show');
+            }
+            $("#lblLive").val(lifes);
         }
         board[monster.i][monster.j] = 3;
         move = false;
@@ -389,10 +396,14 @@ function UpdatePosition() {
     if (board[shape.i][shape.j] == 3) {
         window.clearInterval(interval);
         window.alert("loser!!!");
-        lives--;
-        if (lives > 0) {
+        lifes--;
+        if (lifes > 0) {
             StartAfterStrike();
         }
+        else {
+            $("#exampleModalCenter").modal('show');
+        }
+        $("#lblLive").val(lifes);
 
     }
     board[shape.i][shape.j] = 2;
@@ -498,4 +509,26 @@ function indexOfMin(arr) {
     }
     return minIndex;
 }
+function BallsColor() {
+    if (p_15 > 0 && p_25 > 0 && p_5 > 0) {
+        var num = (Math.random() * 1.5);
+        if (num < 0.5 && p_15 > 0) {
+            p_5--;
+            return "black";
+        }
+        else if (num >= 0.5 && num < 1) {
+            p_15--;
+            return "red";
+        }
+        else if (p_25 > 0) {
+            p_25--;
+            return "#7FFF00";
+        }
+    }
+    else if (p_5 > 0) { p_5--; return "black"; }
+    else if (p_15 > 0) { p_15--; return "red"; }
+    else { p_25--; return "#7FFF00"; }
+
+}
+
 

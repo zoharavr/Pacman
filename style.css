@@ -55,3 +55,24 @@ canvas{
   .cont{
       margin: auto 0;
   }
+.input{
+    display: inline-block;
+    width: 100%;
+}
+div .circle {
+     margin-right: 2%; 
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    float: left;
+    display:block;    
+}
+#green{
+    background:#7FFF00;
+}
+#black{
+    background:black;
+}
+#red{
+    background:red;
+}
