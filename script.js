@@ -12,6 +12,7 @@ var interval;
 var p_5;
 var p_15;
 var p_25;
+var drawFlag = false;
 var x;
 var lifes = 3;
 var firstTime = true;
@@ -253,10 +254,30 @@ function Draw() {
             } else if (board[i][j] == 1) {
                 context.beginPath();
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-                var color= BallsColor();
-                context.fillStyle =color; //color 
+                var color = BallsColor();
+                board[i][j] = color;
+                context.fillStyle = color; //color 
                 context.fill();
             }
+            else if (board[i][j] == "black") {
+                context.beginPath();
+                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.fillStyle = "black"; //color 
+                context.fill();
+            }
+            else if (board[i][j] == "red") {
+                context.beginPath();
+                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.fillStyle = "red"; //color 
+                context.fill();
+            }
+            else if (board[i][j] == "#7FFF00") {
+                context.beginPath();
+                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.fillStyle = "#7FFF00"; //color 
+                context.fill();
+            }
+
             else if (board[i][j] == 4) {
                 context.beginPath();
                 context.rect(center.x - 30, center.y - 30, 60, 60);
@@ -270,7 +291,6 @@ function Draw() {
             }
         }
     }
-
 }
 function ghostUpdatePosition() {
     var movement = new Array();
@@ -390,8 +410,14 @@ function UpdatePosition() {
             shape.i++;
         }
     }
-    if (board[shape.i][shape.j] == 1) {
-        score++;
+    if (board[shape.i][shape.j] == "red") {
+        score+=15
+    }
+    if (board[shape.i][shape.j] == "black") {
+        score+=5;
+    }
+    if (board[shape.i][shape.j] == "#7FFF00") {
+        score+=25;
     }
     if (board[shape.i][shape.j] == 3) {
         window.clearInterval(interval);
@@ -511,12 +537,12 @@ function indexOfMin(arr) {
 }
 function BallsColor() {
     if (p_15 > 0 && p_25 > 0 && p_5 > 0) {
-        var num = (Math.random() * 1.5);
-        if (num < 0.5 && p_15 > 0) {
+        var num = (Math.random());
+        if (num < 0.25 && p_15 > 0) {
             p_5--;
             return "black";
         }
-        else if (num >= 0.5 && num < 1) {
+        else if (num >= 0.25 && num<=0.4 && p_5>0) {
             p_15--;
             return "red";
         }
@@ -525,10 +551,42 @@ function BallsColor() {
             return "#7FFF00";
         }
     }
+    else if (p_15 > 0 && p_25 > 0 && p_5 == 0) {
+        var num = (Math.random());
+        if (num < 0.5 && p_15 > 0) {
+            p_5--;
+            return "black";
+        }
+        else if (p_25 > 0) {
+            p_25--;
+            return "#7FFF00";
+        }
+    }
+    else if (p_15 > 0 && p_25 == 0 && p_5 > 0) {
+        var num = (Math.random());
+        if (num < 0.5 && p_15 > 0) {
+            p_5--;
+            return "black";
+        }
+        else if (p_5>0) {
+            p_15--;
+            return "red";
+        }
+    }
+    else if (p_15 == 0 && p_25 > 0 && p_5 > 0) {
+        var num = (Math.random());
+        if (num < 0.3 && p_15 > 0) {
+            p_5--;
+            return "black";
+        }
+        else if (p_25 > 0) {
+            p_25--;
+            return "#7FFF00";
+        }
+    }
     else if (p_5 > 0) { p_5--; return "black"; }
     else if (p_15 > 0) { p_15--; return "red"; }
-    else { p_25--; return "#7FFF00"; }
-
+    else if (p_25>0){ p_25--; return "#7FFF00"; }
 }
 
 
