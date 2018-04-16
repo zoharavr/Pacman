@@ -1,4 +1,28 @@
-
+html{
+    position: relative;
+    min-height: 100%;
+}
+body{
+	background-image: url(pacman_s.jpg);
+	background-size: cover;
+	background-attachment: fixed;
+}
+.btn-secondary{
+    color: #ffffcc;
+    background-color: black;
+    border-color: #6c757d;
+}
+.header img {
+    float: left;
+    width: 100px;
+    height: 100px;
+    background: #555;
+  }
+  /* .header h5 {
+    position: relative;
+    top: 18px;
+    left: 10px;
+  } */
 canvas{
   width: auto;
 }   
@@ -10,15 +34,18 @@ canvas{
 .btn-group-lg>.btn, .btn-lg{
     margin-top:2%;
 }
-.footer {
-    position: fixed;
+ .footer {
+    position:absolute ;
     right: 0;
     bottom: 0;
     left: 0;
     /* padding: 1rem; */
-    background-color: #efefef;
+    background-color:black;
     text-align: center;
-  } 
+    color: #ffffcc;
+    overflow: hidden;
+  }  
+
   .form-group{
       margin: 0 auto;
       width: 50%;
@@ -75,4 +102,9 @@ div .circle {
 }
 #red{
     background:red;
+}
+.live{
+    width: 30%;
+    height: 30%;
+    float: left;
 }

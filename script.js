@@ -80,7 +80,7 @@ $("#submit").click(function () {
 $("#login").click(function () {
     $("#login_form").toggle();
 });
-//login part - check that the user exists
+//login part - check IF the user exists
 $("#confirm").click(function () {
     var name = $("#user_name_pass").val();
     var pass = $("#password_pass").val();
@@ -98,6 +98,7 @@ $("#confirm").click(function () {
         if (flag) {
             $("#welcome_screen").css("display", "none");
             $("#options_screen").css("display", "block");
+            $("body").css("background-image","none")
         }
         else {
             alert("incorrect user name or password");
@@ -156,7 +157,11 @@ function Start() {
                 monster.i = 9;
                 monster.j = 9;
                 board[9][9] = 3;
-            }
+            } 
+            if (i == 1 && j == 2) {
+
+                board[1][2] = 5;
+            } 
         }
 
     }
@@ -289,9 +294,17 @@ function Draw() {
                 image.src = "monster.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
+            else if (board[i][j] == 5) {
+                var image = new Image();
+                image.src = "star.jpg";
+                context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
+            }
+
         }
     }
 }
+
+
 function ghostUpdatePosition() {
     var movement = new Array();
     var move = false;
@@ -365,6 +378,7 @@ function ghostUpdatePosition() {
             window.clearInterval(interval);
             window.alert("loser!!!");
             lastState = 0;
+            $("#l"+lifes).css("display","none");
             lifes--;
             if (lifes > 0) {
                 StartAfterStrike();
@@ -411,13 +425,13 @@ function UpdatePosition() {
         }
     }
     if (board[shape.i][shape.j] == "red") {
-        score+=15
+        score += 15
     }
     if (board[shape.i][shape.j] == "black") {
-        score+=5;
+        score += 5;
     }
     if (board[shape.i][shape.j] == "#7FFF00") {
-        score+=25;
+        score += 25;
     }
     if (board[shape.i][shape.j] == 3) {
         window.clearInterval(interval);
@@ -435,9 +449,9 @@ function UpdatePosition() {
     board[shape.i][shape.j] = 2;
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
-    if (score >= 20 && time_elapsed <= 10) {
-        pac_color = "green";
-    }
+    // if (score >= 20 && time_elapsed <= 10) {
+    //     pac_color = "green";
+    // }
     if (score == 50) {
         window.clearInterval(interval);
         window.alert("Game completed");
@@ -481,18 +495,34 @@ function drawpacman(center) {
     context.beginPath();
     //up
     if (x == 1) {
+        context.arc(center.x, center.y, 30, -0.39 * Math.PI, 1.5 * Math.PI);
+        context.lineTo(center.x, center.y);
+        context.fillStyle = pac_color; //color 
+        context.fill();
         context.arc(center.x, center.y, 30, -0.33 * Math.PI, 1.4 * Math.PI);
     }
     //down
     else if (x == 2) {
+        context.arc(center.x, center.y, 30, 0.5 * Math.PI, 0.35 * Math.PI);
+        context.lineTo(center.x, center.y);
+        context.fillStyle = pac_color; //color 
+        context.fill();
         context.arc(center.x, center.y, 30, 0.7 * Math.PI, 0.3 * Math.PI);
     }
     //left
     else if (x == 3) {
+        context.arc(center.x, center.y, 30, 1.1 * Math.PI, Math.PI);
+        context.lineTo(center.x, center.y);
+        context.fillStyle = pac_color; //color 
+        context.fill();
         context.arc(center.x, center.y, 30, 1.2 * Math.PI, 0.9 * Math.PI);
     }
     //right
     else if (x == 4) {
+        context.arc(center.x, center.y, 30, 0.2222, 6.2);
+        context.lineTo(center.x, center.y);
+        context.fillStyle = pac_color; //color 
+        context.fill();
         context.arc(center.x, center.y, 30, 0.5235987756, 5.7595865316);
     }
     //first time 
@@ -542,7 +572,7 @@ function BallsColor() {
             p_5--;
             return "black";
         }
-        else if (num >= 0.25 && num<=0.4 && p_5>0) {
+        else if (num >= 0.25 && num <= 0.4 && p_5 > 0) {
             p_15--;
             return "red";
         }
@@ -568,7 +598,7 @@ function BallsColor() {
             p_5--;
             return "black";
         }
-        else if (p_5>0) {
+        else if (p_5 > 0) {
             p_15--;
             return "red";
         }
@@ -586,7 +616,7 @@ function BallsColor() {
     }
     else if (p_5 > 0) { p_5--; return "black"; }
     else if (p_15 > 0) { p_15--; return "red"; }
-    else if (p_25>0){ p_25--; return "#7FFF00"; }
+    else if (p_25 > 0) { p_25--; return "#7FFF00"; }
 }
 
 
