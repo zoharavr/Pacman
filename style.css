@@ -25,11 +25,12 @@ body{
   } */
 canvas{
   width: auto;
+  border: 3px solid black;
 }   
 #board{
-    margin: auto;
+    margin-left: 10%;
     width: 50%;
-    padding: 10px;
+    padding: 0px;
 }
 .btn-group-lg>.btn, .btn-lg{
     margin-top:2%;
@@ -57,13 +58,28 @@ canvas{
       margin-left: 30%;
       margin-top: 2%;
   }
+  #confirm{
+    /* margin-left: 10%; */
+    margin-top: 2%;
+    /* margin: 0 auto; */
+    width: 78%;
+  }  
   .btn-dark{
       width: 50%;
   }
+  .text-muted{
+      color: #ebe52d!important;
+  }
+  #login:hover {
+    background-color: #ebe52d;
+ }
+ #sign_in:hover{
+    background-color: #ebe52d;
+ }
   .login{
       margin-top: 5%;
       margin-bottom: 5%;
-     /*  width: 25%; */
+     margin-left: 10%;
   }
   #options_screen{
         margin: auto;
@@ -82,6 +98,16 @@ canvas{
   .cont{
       margin: auto 0;
   }
+.form-row{
+    margin-left: 0%;
+    margin-right: 0%;
+}
+.lbls{
+    color:#e6e6e6;
+}
+.about{
+    color:#e6e6e6!important;
+}
 .input{
     display: inline-block;
     width: 100%;
@@ -107,4 +133,19 @@ div .circle {
     width: 30%;
     height: 30%;
     float: left;
+    display:block; 
+    margin-left: 2%;
+}
+.night{
+color: #fff;
+text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #eadd61, 0 0 30px #eadd61, 0 0 40px #eadd61, 0 0 50px #eadd61, 0 0 75px #eadd61;
+letter-spacing: 5px;
+font: 40px 'MisoRegular';}
+.bg-white{
+    background-color: black!important;
+}
+#life_count{
+    /* margin-left: 5%; */
+    display: inline-block;
+    width: 100%;
 }
