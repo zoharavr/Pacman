@@ -1,6 +1,7 @@
 var monster_update1 = 0;
 var monster_update2 = 0;
 var monster_update3 = 0;
+var speed;
 var lastState = new Array();
 lastState[1]=0;
 lastState[2]=0;
@@ -56,6 +57,11 @@ $(document).ready(function () {
 function isEmail(email) {
     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     return regex.test(email);
+}
+function sound()
+{
+    var audio = new Audio('pacman_beginning.WAV');
+    audio.play();
 }
 // make the sign in
 $("#submit").click(function () {
@@ -130,6 +136,8 @@ $("#btn_options").click(function () {
     $("#options_screen").css("display", "none");
     e= document.getElementById("monsterLevel");
     numberOfMonster = e.options[e.selectedIndex].value;
+    var d= document.getElementById("speed");
+    speed= d.options[d.selectedIndex].value;
     p_5 = ($("#ball_num").val() * 0.6);
     p_15 = ($("#ball_num").val() * 0.3);
     p_25 = ($("#ball_num").val() * 0.1);
@@ -150,19 +158,20 @@ $("#play_again").click(function () {
 function Start() {
     $("#up_info").css("display", "block");
     $("#lblLive").val(lifes);
-    var audio = new Audio('pacman_beginning.WAV');
-    audio.play();
     $("#lblName").val(current_user);
     board = new Array();
     shape = new Object();
     if (numberOfMonster >= 1) {
         monster1 = new Object();
+        monster1.z="monster1";
     }
     if (numberOfMonster >= 2) {
         monster2 = new Object();
+        monster2.z="monster2";
     }
     if (numberOfMonster == 3) {
         monster3 = new Object();
+        monster3.z="monster3";
     }
     score = 0;
     var firstTime = true;
@@ -198,7 +207,7 @@ function Start() {
                 if (i == 14 && j == 6) {
                     monster1.i = 14;
                     monster1.j = 6;
-                    board[14][6] = 3;
+                    board[14][6] = "monster1";
                 }
             }
             if (numberOfMonster >= 2) {
@@ -206,7 +215,7 @@ function Start() {
                 if (i == 0 && j == 6) {
                     monster2.i = 0;
                     monster2.j = 6;
-                    board[0][6] = 3;
+                    board[0][6] = "monster2";
                 }
             }
             if (numberOfMonster == 3) {
@@ -215,7 +224,7 @@ function Start() {
                     //monster
                     monster3.i = 0;
                     monster3.j = 0;
-                    board[0][0] = 3;
+                    board[0][0] = "monster3";
                 }
             }
         }
@@ -241,6 +250,7 @@ function Start() {
 
     //do every 250 ms
     interval = setInterval(main, 250);
+    setInterval(sound, 4500);
 }
 
 //first initiallize the board with pacmen and bonuses
@@ -290,17 +300,17 @@ function StartAfterStrike() {
     if (numberOfMonster >= 1) {
         monster1.i = 14;
         monster1.j = 6;
-        board[14][6] = 3;
+        board[14][6] = "monster1";
     }
     if (numberOfMonster >= 2) {
         monster2.i = 0;
         monster2.j = 6;
-        board[0][6] = 3;
+        board[0][6] = "monster2";
     }
     if (numberOfMonster == 3) {
         monster3.i = 0;
         monster3.j = 0;
-        board[0][0] = 3;
+        board[0][0] = "monster3";
     }
     keysDown = {};
     addEventListener("keydown", function (e) {
@@ -381,9 +391,19 @@ function Draw() {
                 context.fillStyle = "grey"; //color 
                 context.fill();
             }
-            else if (board[i][j] == 3) {
+            else if (board[i][j] == "monster1") {
                 var image = new Image();
-                image.src = "monster.PNG";
+                image.src = "monster1.PNG";
+                context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
+            }
+            else if (board[i][j] == "monster2") {
+                var image = new Image();
+                image.src = "monster2.PNG";
+                context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
+            }
+            else if (board[i][j] == "monster3") {
+                var image = new Image();
+                image.src = "monster3.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
             else if (board[i][j] == 5) {
@@ -403,37 +423,50 @@ function Draw() {
 
 
 function ghostUpdatePosition(monster, number) {
+    var rounds;
+    if (speed=="slow") {
+        rounds=4;
+    }
+    else if (speed=="medium") {
+        rounds=3;
+    }
+    else {
+        rounds=2;
+    }
     if (number == 1) {
-        if (monster_update1 < 3) {
+        if (monster_update1 < rounds) {
             monster_update1++;
             return;
         }
-        else if (monster_update1 == 3) {
+        else if (monster_update1 == rounds) {
             monster_update1 = 0;
         }
     }
     else if (number == 2) {
-        if (monster_update2 < 3) {
+        if (monster_update2 < rounds) {
             monster_update2++;
             return;
         }
-        else if (monster_update2 == 3) {
+        else if (monster_update2 == rounds) {
             monster_update2 = 0;
         }
     }
     else if (number == 3) {
-        if (monster_update3 < 3) {
+        if (monster_update3 < rounds) {
             monster_update3++;
             return;
         }
-        else if (monster_update3 == 3) {
+        else if (monster_update3 == rounds) {
             monster_update3 = 0;
         }
     }
     var movement = new Array();
     var move = false;
     //up
-    if (monster.j > 0 && board[monster.i][monster.j - 1] != 4 && board[monster.i][monster.j - 1] != 3) {
+    if (monster.j > 0 && board[monster.i][monster.j - 1] != 4 
+    && board[monster.i][monster.j - 1] != "monster1"
+    && board[monster.i][monster.j - 1] != "monster2"
+    && board[monster.i][monster.j - 1] != "monster3") {
         //future distance up
         var deltYU = Math.abs(shape.j - (monster.j - 1));
         var delXU = Math.abs(shape.i - monster.i);
@@ -444,7 +477,10 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //down
-    if (monster.j < 6 && board[monster.i][monster.j + 1] != 4 && board[monster.i][monster.j + 1] != 3) {
+    if (monster.j < 6 && board[monster.i][monster.j + 1] != 4 
+    && board[monster.i][monster.j + 1] != "monster1"
+    && board[monster.i][monster.j + 1] != "monster2"
+    && board[monster.i][monster.j + 1] != "monster3") {
         //future distance down
         var deltYD = Math.abs(shape.j - (monster.j + 1));
         var delXD = Math.abs(shape.i - monster.i);
@@ -455,8 +491,11 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //left    
-    if (monster.i > 0 && board[monster.i - 1][monster.j] != 4 && board[monster.i - 1][monster.j] != 3) {
-        //future distance left
+    if (monster.i > 0 && board[monster.i - 1][monster.j] != 4 
+    && board[monster.i -1][monster.j ] != "monster1"
+    && board[monster.i -1][monster.j ] != "monster2"
+    && board[monster.i -1][monster.j ] != "monster3") {
+        //future distance leftz
         var deltYL = Math.abs(shape.j - monster.j);
         var delXL = Math.abs(shape.i - (monster.i - 1));
         movement.push(delXL + deltYL);
@@ -466,7 +505,10 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //right
-    if (monster.i < 14 && board[monster.i + 1][monster.j] != 4 && board[monster.i + 1][monster.j] != 3) {
+    if (monster.i < 14 && board[monster.i + 1][monster.j] != 4 
+    && board[monster.i +1][monster.j ] != "monster1"
+    && board[monster.i +1][monster.j] != "monster2"
+    && board[monster.i +1][monster.j] != "monster3") {
         //future distance right
         var deltYR = Math.abs(shape.j - monster.j);
         var delXR = Math.abs(shape.i - (monster.i + 1));
@@ -524,7 +566,7 @@ function ghostUpdatePosition(monster, number) {
         }
         else {
             lastState[number] = board[monster.i][monster.j];
-            board[monster.i][monster.j] = 3;
+            board[monster.i][monster.j] = monster.z;
         }
         move = false;
     }
@@ -570,7 +612,7 @@ function UpdatePosition() {
     if (board[shape.i][shape.j] == "#7FFF00") {
         score += 25;
     }
-    if (board[shape.i][shape.j] == 3) {
+    if (board[shape.i][shape.j] == "monster1" || board[shape.i][shape.j] == "monster2" || board[shape.i][shape.j] == "monster3") {
         if (numberOfMonster>=1) {
             board[monster1.i][monster1.j] = lastState[1];
             lastState[1]=0;
