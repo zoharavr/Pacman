@@ -1,11 +1,18 @@
-var lastState = 0;
+var monster_update1 = 0;
+var monster_update2 = 0;
+var monster_update3 = 0;
+var lastState = new Array();
+lastState[1]=0;
+lastState[2]=0;
+lastState[3]=0;
 const HighValue = 50;
 var context = document.getElementById("canvas").getContext("2d");
-///dor 
-// context.width=window.innerHeight;
-// context.height=window.innerWidth;
+var e ;
+var numberOfMonster;
 var shape;
-var monster;
+var monster1;
+var monster2;
+var monster3;
 var board;
 var score;
 var pac_color;
@@ -121,6 +128,8 @@ $("#confirm").click(function () {
 });
 $("#btn_options").click(function () {
     $("#options_screen").css("display", "none");
+    e= document.getElementById("monsterLevel");
+    numberOfMonster = e.options[e.selectedIndex].value;
     p_5 = ($("#ball_num").val() * 0.6);
     p_15 = ($("#ball_num").val() * 0.3);
     p_25 = ($("#ball_num").val() * 0.1);
@@ -146,7 +155,15 @@ function Start() {
     $("#lblName").val(current_user);
     board = new Array();
     shape = new Object();
-    monster = new Object();
+    if (numberOfMonster >= 1) {
+        monster1 = new Object();
+    }
+    if (numberOfMonster >= 2) {
+        monster2 = new Object();
+    }
+    if (numberOfMonster == 3) {
+        monster3 = new Object();
+    }
     score = 0;
     var firstTime = true;
     pac_color = "yellow";
@@ -177,17 +194,30 @@ function Start() {
                 board[i][j] = 0;
             }
             cnt--;
-            // }
-            if (i == 14 && j == 6) {
-                //monster
-                monster.i = 14;
-                monster.j = 6;
-                board[14][6] = 3;
+            if (numberOfMonster >= 1) {
+                if (i == 14 && j == 6) {
+                    monster1.i = 14;
+                    monster1.j = 6;
+                    board[14][6] = 3;
+                }
             }
-            // if (i == 1 && j == 2) {
-
-            //     board[1][2] = 5;
-            // }
+            if (numberOfMonster >= 2) {
+                //monster2
+                if (i == 0 && j == 6) {
+                    monster2.i = 0;
+                    monster2.j = 6;
+                    board[0][6] = 3;
+                }
+            }
+            if (numberOfMonster == 3) {
+                //monster3
+                if (i == 0 && j == 0) {
+                    //monster
+                    monster3.i = 0;
+                    monster3.j = 0;
+                    board[0][0] = 3;
+                }
+            }
         }
 
     }
@@ -236,28 +266,42 @@ function findRandomEmptyCell(board) {
 }
 
 function main() {
-    ghostUpdatePosition();
+    if (numberOfMonster==1){
+        ghostUpdatePosition(monster1, 1);
+    }
+    else if (numberOfMonster==2) {
+        ghostUpdatePosition(monster1, 1);
+        ghostUpdatePosition(monster2, 2);
+    }
+    else if (numberOfMonster==3) {
+        ghostUpdatePosition(monster1, 1);
+        ghostUpdatePosition(monster2, 2);
+        ghostUpdatePosition(monster3, 3);
+    } 
     UpdatePosition();
-    checkCollisions();
     Draw();
-    musicSound();
-}
-function checkCollisions() {
-
-}
-function musicSound() {
-
 }
 
 function StartAfterStrike() {
-    board[shape.i][shape.j] = 0;
     var emptyCell = findRandomEmptyCell(board);
     shape.i = emptyCell[0];
     shape.j = emptyCell[1];
     board[emptyCell[0]][emptyCell[1]] = 2;
-    monster.i = 10;
-    monster.j = 6;
-    board[10][6] = 3;
+    if (numberOfMonster >= 1) {
+        monster1.i = 14;
+        monster1.j = 6;
+        board[14][6] = 3;
+    }
+    if (numberOfMonster >= 2) {
+        monster2.i = 0;
+        monster2.j = 6;
+        board[0][6] = 3;
+    }
+    if (numberOfMonster == 3) {
+        monster3.i = 0;
+        monster3.j = 0;
+        board[0][0] = 3;
+    }
     keysDown = {};
     addEventListener("keydown", function (e) {
         keysDown[e.keyCode] = true;
@@ -358,7 +402,34 @@ function Draw() {
 }
 
 
-function ghostUpdatePosition() {
+function ghostUpdatePosition(monster, number) {
+    if (number == 1) {
+        if (monster_update1 < 3) {
+            monster_update1++;
+            return;
+        }
+        else if (monster_update1 == 3) {
+            monster_update1 = 0;
+        }
+    }
+    else if (number == 2) {
+        if (monster_update2 < 3) {
+            monster_update2++;
+            return;
+        }
+        else if (monster_update2 == 3) {
+            monster_update2 = 0;
+        }
+    }
+    else if (number == 3) {
+        if (monster_update3 < 3) {
+            monster_update3++;
+            return;
+        }
+        else if (monster_update3 == 3) {
+            monster_update3 = 0;
+        }
+    }
     var movement = new Array();
     var move = false;
     //up
@@ -408,7 +479,7 @@ function ghostUpdatePosition() {
 
     var minIndex = indexOfMin(movement);
     if (move) {
-        board[monster.i][monster.j] = lastState;
+        board[monster.i][monster.j] = lastState[number];
         //up
         if (minIndex == 0) {
             monster.j = monster.j - 1;
@@ -425,14 +496,23 @@ function ghostUpdatePosition() {
         if (minIndex == 3) {
             monster.i = monster.i + 1;
         }
-
-        lastState = board[monster.i][monster.j];
+        //the ghost eat the pacman
         if (board[monster.i][monster.j] == 2) {
+            if (numberOfMonster>=1) {
+                board[monster1.i][monster1.j] = lastState[1];
+                lastState[1]=0;
+            } 
+            if (numberOfMonster>=2) {
+                board[monster2.i][monster2.j] = lastState[2];
+                lastState[2]=0;
+            }
+           if (numberOfMonster>=3) {
+                board[monster3.i][monster3.j] = lastState[3];
+                lastState[3]=0;
+           } 
             window.clearInterval(interval);
             window.alert("loser!!!");
-            lastState = 0;
             $("#l" + lifes).remove();
-            //$("#l" + lifes).css("display", "none");
             lifes--;
             if (lifes > 0) {
                 StartAfterStrike();
@@ -442,7 +522,10 @@ function ghostUpdatePosition() {
             }
             $("#lblLive").val(lifes);
         }
-        board[monster.i][monster.j] = 3;
+        else {
+            lastState[number] = board[monster.i][monster.j];
+            board[monster.i][monster.j] = 3;
+        }
         move = false;
     }
 }
@@ -488,8 +571,20 @@ function UpdatePosition() {
         score += 25;
     }
     if (board[shape.i][shape.j] == 3) {
+        if (numberOfMonster>=1) {
+            board[monster1.i][monster1.j] = lastState[1];
+            lastState[1]=0;
+        } 
+        if (numberOfMonster>=2) {
+            board[monster2.i][monster2.j] = lastState[2];
+            lastState[2]=0;
+        }
+       if (numberOfMonster>=3) {
+            board[monster3.i][monster3.j] = lastState[3];
+            lastState[3]=0;
+       } 
         window.clearInterval(interval);
-        window.alert("loser!!!");
+        window.alert("me");
         $("#l" + lifes).remove();
         //  $("#l" + lifes).css("display", "none");
         lifes--;
