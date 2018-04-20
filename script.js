@@ -9,6 +9,7 @@ lastState[1] = 0;
 lastState[2] = 0;
 lastState[3] = 0;
 var e;
+var eat_sound = new Audio('pacman_chomp.WAV');
 var numberOfMonster;
 var shape;
 var monster1;
@@ -47,7 +48,7 @@ $(document).ready(function () {
     $("#board").css("display", "none");
     $("#exampleModalCenter").modal('hide');
     context.canvas.width = window.innerWidth - 385;
-    context.canvas.height = window.innerHeight - 205;
+    context.canvas.height = window.innerHeight - 195;
     $("#sign_in").click(function () {
         $("#form").toggle();
     });
@@ -156,6 +157,7 @@ function Start() {
     $("#up_info").css("display", "block");
     $("#lblLive").val(lifes);
     $("#lblName").val(current_user);
+    sound();
     board = new Array();
     shape = new Object();
     if (numberOfMonster >= 1) {
@@ -241,7 +243,7 @@ function Start() {
 
     //do every 250 ms
     interval = setInterval(main, 250);
-    setInterval(sound, 4500);
+   // setInterval(sound, 4500);
 }
 
 
@@ -580,6 +582,7 @@ function UpdatePosition() {
     if (x == 1) {
 
         if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) {
+            //eat_sound.play();
             firstTime = false;
             lastmove = 1;
             shape.j--;
@@ -587,6 +590,7 @@ function UpdatePosition() {
     }
     if (x == 2) {
         if (shape.j < 6 && board[shape.i][shape.j + 1] != 4) {
+            //eat_sound.play();
             firstTime = false;
             lastmove = 2;
             shape.j++;
@@ -594,6 +598,7 @@ function UpdatePosition() {
     }
     if (x == 3) {
         if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
+            //eat_sound.play();
             firstTime = false;
             lastmove = 3;
             shape.i--;
@@ -601,18 +606,22 @@ function UpdatePosition() {
     }
     if (x == 4) {
         if (shape.i < 14 && board[shape.i + 1][shape.j] != 4) {
+          //  eat_sound.play();
             firstTime = false;
             lastmove = 4;
             shape.i++;
         }
     }
     if (board[shape.i][shape.j] == "red") {
+        eat_sound.play();
         score += 15
     }
     if (board[shape.i][shape.j] == "black") {
+        eat_sound.play();
         score += 5;
     }
     if (board[shape.i][shape.j] == "#7FFF00") {
+        eat_sound.play();
         score += 25;
     }
     if (board[shape.i][shape.j] == "monster1" || board[shape.i][shape.j] == "monster2" || board[shape.i][shape.j] == "monster3") {
@@ -629,8 +638,7 @@ function UpdatePosition() {
             lastState[3] = 0;
         }
         window.clearInterval(interval);
-        -        window.alert("loser!!!");
-        +        window.alert("me");
+              window.alert("loser!!!");
         $("#l" + lifes).remove();
         //  $("#l" + lifes).css("display", "none");
         lifes--;
