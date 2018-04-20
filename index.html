@@ -35,10 +35,10 @@
             <div class="col-sm-2">
                 <label>Lives:</label>
                 <div class="cont" id="add">
-                <img id="l1" class="live" height="50" width="90" src="life.jpg">
-                <img id="l2" class="live" height="50" width="90" src="life.jpg">
-                <img id="l3" class="live" height="50" width="90" src="life.jpg">
-            </div>
+                    <img id="l1" class="live" height="50" width="90" src="life.jpg">
+                    <img id="l2" class="live" height="50" width="90" src="life.jpg">
+                    <img id="l3" class="live" height="50" width="90" src="life.jpg">
+                </div>
             </div>
             <!-- <input id="lblLive" class="form-control upper" type="text" readonly> -->
         </div>
@@ -47,7 +47,6 @@
     <br/>
     <div id="board">
         <canvas id="canvas">
-            <div id="c"></div>
         </canvas>
     </div>
     <br>
@@ -80,7 +79,7 @@
                 <div class="col-sm-6">
                     <label class="lbls">Email address</label>
                     <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
-                    <small id="emailHelp" class="form-text text-muted" >We'll never share your email with anyone else.</small>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="col-sm-6">
                     <label class="lbls">Birth date</label>
@@ -122,10 +121,9 @@
         </select>
         <label>Choose how fast you want the game will be:</label>
         <select id="speed" class="custom-select">
-            <option selected value="medium">medium</option>
-            <option value="slow">slow</option>
-            <option value="medium">medium</option>
-            <option value="fast">fast</option>
+            <option selected value="slow">Slow</option>
+            <option value="medium">Medium</option>
+            <option value="fast">Fast</option>
         </select>
         <label>Choose how long you are going to play</label>
         <div class="input-group mb-3">
@@ -142,9 +140,9 @@
         </select>
         <label>Points:</label>
         <div class="input">
-            <div id="black" class="circle"></div>
-            <div id="red" class="circle"></div>
-            <div id="green" class="circle" ></div>
+            <div id="black" class="circle">5</div>
+            <div id="red" class="circle">15</div>
+            <div id="green" class="circle">25</div>
         </div>
         <br>
         <button id="btn_options" type="button" class="btn btn-success">Let's Go!</button>
@@ -170,7 +168,7 @@
             </div>
         </div>
     </div>
-    <!-- modal for the finishing game -->
+    <!-- modal for the finishing game when you lost all you life -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -180,11 +178,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                   Do you want to play again?
+                <div id="end" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                        <button id="play_again" type="button" class="btn btn-warning">Play!</button>
+                    <button id="play_again" type="button" class="btn btn-warning">Play!</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No Thanks</button>
                 </div>
             </div>

@@ -1,14 +1,14 @@
+const HighValue = 50;
+var context = document.getElementById("canvas").getContext("2d");
 var monster_update1 = 0;
 var monster_update2 = 0;
 var monster_update3 = 0;
 var speed;
 var lastState = new Array();
-lastState[1]=0;
-lastState[2]=0;
-lastState[3]=0;
-const HighValue = 50;
-var context = document.getElementById("canvas").getContext("2d");
-var e ;
+lastState[1] = 0;
+lastState[2] = 0;
+lastState[3] = 0;
+var e;
 var numberOfMonster;
 var shape;
 var monster1;
@@ -40,8 +40,7 @@ var current_user;
 var userDB = [];
 userDB[0] = deafult;
 var lastmove;
-//Start();
-//about 
+
 $(document).ready(function () {
     $("#welcome_screen").css("display", "block");
     $("#up_info").css("display", "none");
@@ -49,7 +48,6 @@ $(document).ready(function () {
     $("#exampleModalCenter").modal('hide');
     context.canvas.width = window.innerWidth - 385;
     context.canvas.height = window.innerHeight - 205;
-
     $("#sign_in").click(function () {
         $("#form").toggle();
     });
@@ -58,8 +56,7 @@ function isEmail(email) {
     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
     return regex.test(email);
 }
-function sound()
-{
+function sound() {
     var audio = new Audio('pacman_beginning.WAV');
     audio.play();
 }
@@ -134,10 +131,10 @@ $("#confirm").click(function () {
 });
 $("#btn_options").click(function () {
     $("#options_screen").css("display", "none");
-    e= document.getElementById("monsterLevel");
+    e = document.getElementById("monsterLevel");
     numberOfMonster = e.options[e.selectedIndex].value;
-    var d= document.getElementById("speed");
-    speed= d.options[d.selectedIndex].value;
+    var d = document.getElementById("speed");
+    speed = d.options[d.selectedIndex].value;
     p_5 = ($("#ball_num").val() * 0.6);
     p_15 = ($("#ball_num").val() * 0.3);
     p_25 = ($("#ball_num").val() * 0.1);
@@ -163,15 +160,15 @@ function Start() {
     shape = new Object();
     if (numberOfMonster >= 1) {
         monster1 = new Object();
-        monster1.z="monster1";
+        monster1.z = "monster1";
     }
     if (numberOfMonster >= 2) {
         monster2 = new Object();
-        monster2.z="monster2";
+        monster2.z = "monster2";
     }
     if (numberOfMonster == 3) {
         monster3 = new Object();
-        monster3.z="monster3";
+        monster3.z = "monster3";
     }
     score = 0;
     var firstTime = true;
@@ -182,12 +179,7 @@ function Start() {
     start_time = new Date();
     for (var i = 0; i < 15; i++) {
         board[i] = new Array();
-        //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
         for (var j = 0; j < 7; j++) {
-            // if ((i == 3 && j == 3) || (i == 3 && j == 4) || (i == 3 && j == 5) || (i == 6 && j == 1) || (i == 6 && j == 2)) {
-            //     board[i][j] = 4;
-            // }
-            // else {
             var randomNum = Math.random();
             if (randomNum <= 1.0 * food_remain / cnt) {
                 food_remain--;
@@ -228,7 +220,6 @@ function Start() {
                 }
             }
         }
-
     }
     if (firstTime) {
         firstInit(board, shape);
@@ -253,6 +244,7 @@ function Start() {
     setInterval(sound, 4500);
 }
 
+
 //first initiallize the board with pacmen and bonuses
 function firstInit(board, shape) {
     var pac_cell = findRandomEmptyCell(board);
@@ -276,21 +268,22 @@ function findRandomEmptyCell(board) {
 }
 
 function main() {
-    if (numberOfMonster==1){
+    if (numberOfMonster == 1) {
         ghostUpdatePosition(monster1, 1);
     }
-    else if (numberOfMonster==2) {
+    else if (numberOfMonster == 2) {
         ghostUpdatePosition(monster1, 1);
         ghostUpdatePosition(monster2, 2);
     }
-    else if (numberOfMonster==3) {
+    else if (numberOfMonster == 3) {
         ghostUpdatePosition(monster1, 1);
         ghostUpdatePosition(monster2, 2);
         ghostUpdatePosition(monster3, 3);
-    } 
+    }
     UpdatePosition();
     Draw();
 }
+
 
 function StartAfterStrike() {
     var emptyCell = findRandomEmptyCell(board);
@@ -344,7 +337,15 @@ function Draw() {
     $("#board").css("display", "block");
     $("#welcome_screen").css("display", "none");
     if (time_elapsed > (stop) * 60) {
-        alert("stop!");
+        if (score < 150) {
+            $("#end").text(" You can do better than " + score + " points. Do you want to play again?");
+            $("#exampleModalCenter").modal('show');
+        }
+        else {
+            $("#end").text(" We have a Winner!!!");
+            $("#exampleModalCenter").modal('show');
+        }
+
         window.clearInterval(interval);
     }
     canvas.width = canvas.width; //clean board
@@ -398,6 +399,7 @@ function Draw() {
             }
             else if (board[i][j] == "monster2") {
                 var image = new Image();
+
                 image.src = "monster2.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
@@ -424,14 +426,14 @@ function Draw() {
 
 function ghostUpdatePosition(monster, number) {
     var rounds;
-    if (speed=="slow") {
-        rounds=4;
+    if (speed == "slow") {
+        rounds = 4;
     }
-    else if (speed=="medium") {
-        rounds=3;
+    else if (speed == "medium") {
+        rounds = 3;
     }
     else {
-        rounds=2;
+        rounds = 2;
     }
     if (number == 1) {
         if (monster_update1 < rounds) {
@@ -463,10 +465,10 @@ function ghostUpdatePosition(monster, number) {
     var movement = new Array();
     var move = false;
     //up
-    if (monster.j > 0 && board[monster.i][monster.j - 1] != 4 
-    && board[monster.i][monster.j - 1] != "monster1"
-    && board[monster.i][monster.j - 1] != "monster2"
-    && board[monster.i][monster.j - 1] != "monster3") {
+    if (monster.j > 0 && board[monster.i][monster.j - 1] != 4
+        && board[monster.i][monster.j - 1] != "monster1"
+        && board[monster.i][monster.j - 1] != "monster2"
+        && board[monster.i][monster.j - 1] != "monster3") {
         //future distance up
         var deltYU = Math.abs(shape.j - (monster.j - 1));
         var delXU = Math.abs(shape.i - monster.i);
@@ -477,10 +479,10 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //down
-    if (monster.j < 6 && board[monster.i][monster.j + 1] != 4 
-    && board[monster.i][monster.j + 1] != "monster1"
-    && board[monster.i][monster.j + 1] != "monster2"
-    && board[monster.i][monster.j + 1] != "monster3") {
+    if (monster.j < 6 && board[monster.i][monster.j + 1] != 4
+        && board[monster.i][monster.j + 1] != "monster1"
+        && board[monster.i][monster.j + 1] != "monster2"
+        && board[monster.i][monster.j + 1] != "monster3") {
         //future distance down
         var deltYD = Math.abs(shape.j - (monster.j + 1));
         var delXD = Math.abs(shape.i - monster.i);
@@ -491,10 +493,10 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //left    
-    if (monster.i > 0 && board[monster.i - 1][monster.j] != 4 
-    && board[monster.i -1][monster.j ] != "monster1"
-    && board[monster.i -1][monster.j ] != "monster2"
-    && board[monster.i -1][monster.j ] != "monster3") {
+    if (monster.i > 0 && board[monster.i - 1][monster.j] != 4
+        && board[monster.i - 1][monster.j] != "monster1"
+        && board[monster.i - 1][monster.j] != "monster2"
+        && board[monster.i - 1][monster.j] != "monster3") {
         //future distance leftz
         var deltYL = Math.abs(shape.j - monster.j);
         var delXL = Math.abs(shape.i - (monster.i - 1));
@@ -505,10 +507,10 @@ function ghostUpdatePosition(monster, number) {
         movement.push(HighValue);
     }
     //right
-    if (monster.i < 14 && board[monster.i + 1][monster.j] != 4 
-    && board[monster.i +1][monster.j ] != "monster1"
-    && board[monster.i +1][monster.j] != "monster2"
-    && board[monster.i +1][monster.j] != "monster3") {
+    if (monster.i < 14 && board[monster.i + 1][monster.j] != 4
+        && board[monster.i + 1][monster.j] != "monster1"
+        && board[monster.i + 1][monster.j] != "monster2"
+        && board[monster.i + 1][monster.j] != "monster3") {
         //future distance right
         var deltYR = Math.abs(shape.j - monster.j);
         var delXR = Math.abs(shape.i - (monster.i + 1));
@@ -540,26 +542,27 @@ function ghostUpdatePosition(monster, number) {
         }
         //the ghost eat the pacman
         if (board[monster.i][monster.j] == 2) {
-            if (numberOfMonster>=1) {
+            if (numberOfMonster >= 1) {
                 board[monster1.i][monster1.j] = lastState[1];
-                lastState[1]=0;
-            } 
-            if (numberOfMonster>=2) {
-                board[monster2.i][monster2.j] = lastState[2];
-                lastState[2]=0;
+                lastState[1] = 0;
             }
-           if (numberOfMonster>=3) {
+            if (numberOfMonster >= 2) {
+                board[monster2.i][monster2.j] = lastState[2];
+                lastState[2] = 0;
+            }
+            if (numberOfMonster >= 3) {
                 board[monster3.i][monster3.j] = lastState[3];
-                lastState[3]=0;
-           } 
+                lastState[3] = 0;
+            }
             window.clearInterval(interval);
-            window.alert("loser!!!");
+            //  window.alert("loser!!!");
             $("#l" + lifes).remove();
             lifes--;
             if (lifes > 0) {
                 StartAfterStrike();
             }
             else {
+                $("#end").text(" You lost! Do you want to play again?");
                 $("#exampleModalCenter").modal('show');
             }
             $("#lblLive").val(lifes);
@@ -613,20 +616,21 @@ function UpdatePosition() {
         score += 25;
     }
     if (board[shape.i][shape.j] == "monster1" || board[shape.i][shape.j] == "monster2" || board[shape.i][shape.j] == "monster3") {
-        if (numberOfMonster>=1) {
+        if (numberOfMonster >= 1) {
             board[monster1.i][monster1.j] = lastState[1];
-            lastState[1]=0;
-        } 
-        if (numberOfMonster>=2) {
-            board[monster2.i][monster2.j] = lastState[2];
-            lastState[2]=0;
+            lastState[1] = 0;
         }
-       if (numberOfMonster>=3) {
+        if (numberOfMonster >= 2) {
+            board[monster2.i][monster2.j] = lastState[2];
+            lastState[2] = 0;
+        }
+        if (numberOfMonster >= 3) {
             board[monster3.i][monster3.j] = lastState[3];
-            lastState[3]=0;
-       } 
+            lastState[3] = 0;
+        }
         window.clearInterval(interval);
-        window.alert("me");
+        -        window.alert("loser!!!");
+        +        window.alert("me");
         $("#l" + lifes).remove();
         //  $("#l" + lifes).css("display", "none");
         lifes--;
@@ -634,6 +638,7 @@ function UpdatePosition() {
             StartAfterStrike();
         }
         else {
+            $("#end").text(" You lost! Do you want to play again?");
             $("#exampleModalCenter").modal('show');
         }
         $("#lblLive").val(lifes);
@@ -816,5 +821,3 @@ function BallsColor() {
     else if (p_15 > 0) { p_15--; return "red"; }
     else if (p_25 > 0) { p_25--; return "#7FFF00"; }
 }
-
-

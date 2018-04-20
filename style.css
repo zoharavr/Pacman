@@ -24,7 +24,8 @@ body{
     left: 10px;
   } */
 canvas{
-  width: auto;
+  /* width: auto; */
+  display: block;
   border: 3px solid black;
 }   
 #board{
@@ -84,8 +85,10 @@ canvas{
   #options_screen{
         margin: auto;
         width: 40%;
-        border: 3px solid green;
+        border: 3px solid yellow;
         padding: 10px;
+        position: relative;
+        bottom: 50px;
   }
   #btn_options{
       margin-left: 40%;
@@ -113,6 +116,10 @@ canvas{
     width: 100%;
 }
 div .circle {
+    font-size: 10px;
+    color: blue;
+    line-height: 30px;
+    text-align: center;
      margin-right: 2%; 
     width: 30px;
     height: 30px;
