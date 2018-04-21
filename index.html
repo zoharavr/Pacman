@@ -21,19 +21,19 @@
     <form id="up_info">
         <div class="form-row ">
             <div class="col-sm-2">
-                <label>Player Name:</label>
+                <label class="lbls">Player Name:</label>
                 <input id="lblName" class="form-control upper " type="text" readonly>
             </div>
             <div class="col-sm-2" id="score">
-                <label>SCORE:</label>
+                <label class="lbls">SCORE:</label>
                 <input id="lblScore" class="form-control upper" type="text" readonly>
             </div>
             <div class="col-sm-2" id="time">
-                <label>TIME:</label>
+                <label class="lbls">TIME:</label>
                 <input id="lblTime" class="form-control upper" type="text" readonly>
             </div>
             <div class="col-sm-2">
-                <label>Lives:</label>
+                <label class="lbls" >Lives:</label>
                 <div class="cont" id="add">
                     <img id="l1" class="live" height="50" width="90" src="life.jpg">
                     <img id="l2" class="live" height="50" width="90" src="life.jpg">
@@ -111,7 +111,7 @@
     </div>
     <!-- here starts the option form for the user -->
     <div id="options_screen" style="display:none;">
-        <label>Choose how much to eat:</label>
+        <label class="lbls">Choose how much to eat:</label>
         <select id="ball_num" class="custom-select">
             <option selected value="50">50</option>
             <option value="60">60</option>
@@ -119,26 +119,26 @@
             <option value="80">80</option>
             <option value="90">90</option>
         </select>
-        <label>Choose how fast you want the game will be:</label>
+        <label class="lbls">Choose how fast you want the game will be:</label>
         <select id="speed" class="custom-select">
             <option selected value="slow">Slow</option>
             <option value="medium">Medium</option>
             <option value="fast">Fast</option>
-        </select>
-        <label>Choose how long you are going to play</label>
+        </select class="lbls">
+        <label class="lbls">Choose how long you are going to play</label>
         <div class="input-group mb-3">
             <input type="text" id="minutes" class="form-control" value="1">
             <div class="input-group-append">
                 <span class="input-group-text" id="basic-addon2">minutes</span>
             </div>
         </div>
-        <label>Difficulty:</label>
+        <label class="lbls">Difficulty:</label>
         <select id="monsterLevel" class="custom-select">
             <option selected value="1">1 Monster - Easy</option>
             <option value="2">2 Monsters - Medium</option>
             <option value="3">3 Monsters - Hard</option>
         </select>
-        <label>Points:</label>
+        <label class="lbls">Points:</label>
         <div class="input">
             <div id="black" class="circle">5</div>
             <div id="red" class="circle">15</div>
@@ -147,20 +147,21 @@
         <br>
         <button id="btn_options" type="button" class="btn btn-success">Let's Go!</button>
     </div>
-    <div class="footer">All rights reserved. contact us in:zoharavr@post.bgu.ac.il or</div>
+    <div class="footer">All rights reserved. contact us in: zoharavr@post.bgu.ac.il or yosefmel@post.bgu.ac.il</div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal Dialog</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">About</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    By: Zohar Avraham & Yosef Meltser
+                    By: Zohar Avraham & Yosef Meltser.
+                    we used validate jquery plugin and Bootstrap.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -9,7 +9,9 @@ lastState[1] = 0;
 lastState[2] = 0;
 lastState[3] = 0;
 var e;
+var clock_alive = true;
 var eat_sound = new Audio('pacman_chomp.WAV');
+var dead_sound = new Audio('pacman_death.WAV');
 var numberOfMonster;
 var shape;
 var monster1;
@@ -122,7 +124,6 @@ $("#confirm").click(function () {
         if (flag) {
             $("#welcome_screen").css("display", "none");
             $("#options_screen").css("display", "block");
-            $("body").css("background-image", "none")
         }
         else {
             alert("incorrect user name or password");
@@ -136,6 +137,7 @@ $("#btn_options").click(function () {
     numberOfMonster = e.options[e.selectedIndex].value;
     var d = document.getElementById("speed");
     speed = d.options[d.selectedIndex].value;
+    $("body").css("background-image", "url(back.jpg)");
     p_5 = ($("#ball_num").val() * 0.6);
     p_15 = ($("#ball_num").val() * 0.3);
     p_25 = ($("#ball_num").val() * 0.1);
@@ -188,9 +190,6 @@ function Start() {
                 board[i][j] = 1;
             }
             else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-                //     shape.i = i;
-                //     shape.j = j;
-                //     pacman_remain--;
                 board[i][j] = 4;
             }
             else {
@@ -243,7 +242,7 @@ function Start() {
 
     //do every 250 ms
     interval = setInterval(main, 250);
-   // setInterval(sound, 4500);
+    // setInterval(sound, 4500);
 }
 
 
@@ -338,6 +337,7 @@ function Draw() {
     //needs to move from here
     $("#board").css("display", "block");
     $("#welcome_screen").css("display", "none");
+    //checks the time 
     if (time_elapsed > (stop) * 60) {
         if (score < 150) {
             $("#end").text(" You can do better than " + score + " points. Do you want to play again?");
@@ -372,7 +372,7 @@ function Draw() {
             else if (board[i][j] == "black") {
                 context.beginPath();
                 context.arc(center.x, center.y, 8, 0, 2 * Math.PI); // circle
-                context.fillStyle = "black"; //color 
+                context.fillStyle = "#a8b3bd"; //color 
                 context.fill();
             }
             else if (board[i][j] == "red") {
@@ -384,7 +384,7 @@ function Draw() {
             else if (board[i][j] == "#7FFF00") {
                 context.beginPath();
                 context.arc(center.x, center.y, 8, 0, 2 * Math.PI); // circle
-                context.fillStyle = "#7FFF00"; //color 
+                context.fillStyle = "#ffd700"; //color 
                 context.fill();
             }
 
@@ -412,7 +412,7 @@ function Draw() {
             }
             else if (board[i][j] == 5) {
                 var image = new Image();
-                image.src = "star.jpg";
+                image.src = "star.png";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
             else if (board[i][j] == 9) {
@@ -423,9 +423,21 @@ function Draw() {
 
         }
     }
+  //  if (clock_alive) { drawClock(board, context); }
+
 }
 
+// function drawClock(board, cntx) {
+//     var center = new Object();
+//     var image = new Image();
+//     image.src = "clock.PNG";
+//     var cord = findRandomEmptyCell(board);
+//     center.x = cord[0] * 60 + 30;
+//     center.y = cord[1] * 60 + 30;
+//     board[cord[0]][cord[1]] = "clock";
+//     cntx.drawImage(image, center.x - 30, center.y - 30, 50, 50);
 
+// }
 function ghostUpdatePosition(monster, number) {
     var rounds;
     if (speed == "slow") {
@@ -464,6 +476,7 @@ function ghostUpdatePosition(monster, number) {
             monster_update3 = 0;
         }
     }
+
     var movement = new Array();
     var move = false;
     //up
@@ -544,6 +557,7 @@ function ghostUpdatePosition(monster, number) {
         }
         //the ghost eat the pacman
         if (board[monster.i][monster.j] == 2) {
+            dead_sound.play();
             if (numberOfMonster >= 1) {
                 board[monster1.i][monster1.j] = lastState[1];
                 lastState[1] = 0;
@@ -598,7 +612,6 @@ function UpdatePosition() {
     }
     if (x == 3) {
         if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
-            //eat_sound.play();
             firstTime = false;
             lastmove = 3;
             shape.i--;
@@ -606,11 +619,15 @@ function UpdatePosition() {
     }
     if (x == 4) {
         if (shape.i < 14 && board[shape.i + 1][shape.j] != 4) {
-          //  eat_sound.play();
             firstTime = false;
             lastmove = 4;
             shape.i++;
         }
+    }
+    if (board[shape.i][shape.j] == "clock") {
+        clock_alive = false;
+        stop += 30;
+
     }
     if (board[shape.i][shape.j] == "red") {
         eat_sound.play();
@@ -625,6 +642,7 @@ function UpdatePosition() {
         score += 25;
     }
     if (board[shape.i][shape.j] == "monster1" || board[shape.i][shape.j] == "monster2" || board[shape.i][shape.j] == "monster3") {
+        dead_sound.play();
         if (numberOfMonster >= 1) {
             board[monster1.i][monster1.j] = lastState[1];
             lastState[1] = 0;
@@ -638,7 +656,7 @@ function UpdatePosition() {
             lastState[3] = 0;
         }
         window.clearInterval(interval);
-              window.alert("loser!!!");
+        window.alert("loser!!!");
         $("#l" + lifes).remove();
         //  $("#l" + lifes).css("display", "none");
         lifes--;
@@ -660,13 +678,6 @@ function UpdatePosition() {
     board[shape.i][shape.j] = 2;
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
-    // if (score >= 20 && time_elapsed <= 10) {
-    //     pac_color = "green";
-    // }
-    // if (score == 50) {
-    //     window.clearInterval(interval);
-    //     window.alert("Game completed");
-    // }
 }
 function drawEye(center) {
     context.beginPath();

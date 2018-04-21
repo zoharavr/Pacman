@@ -85,7 +85,7 @@ canvas{
   #options_screen{
         margin: auto;
         width: 40%;
-        border: 3px solid yellow;
+        border: 3px solid #ecffb3;
         padding: 10px;
         position: relative;
         bottom: 50px;
@@ -110,28 +110,30 @@ canvas{
 }
 .about{
     color:#e6e6e6!important;
+    font-family:Palatino Linotype;
+    font-size: 20px;
 }
 .input{
     display: inline-block;
     width: 100%;
 }
 div .circle {
-    font-size: 10px;
-    color: blue;
-    line-height: 30px;
+    font-size: 15px;
+    color: black;
+    line-height: 35px;
     text-align: center;
      margin-right: 2%; 
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     float: left;
     display:block;    
 }
 #green{
-    background:#7FFF00;
+    background:#ffd700;
 }
 #black{
-    background:black;
+    background:#a8b3bd;
 }
 #red{
     background:red;
@@ -155,4 +157,7 @@ font: 40px 'MisoRegular';}
     /* margin-left: 5%; */
     display: inline-block;
     width: 100%;
+}
+.border-bottom{
+    border-bottom: 1px solid black!important;
 }
