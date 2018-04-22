@@ -15,9 +15,28 @@
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2  about" href="https://en.wikipedia.org/wiki/Pac-Man">Support</a>
             <a class="p-2  about" href="#" data-toggle="modal" data-target="#exampleModalLong">About</a>
+            <a class="p-2  about" id="sign_out" href="#"  data-toggle="modal" data-target="#signOutModal">Sign out</a>
         </nav>
     </div>
-
+    <div class="modal fade" id="signOutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Sign out</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to sign out?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button type="button" id="back_to" class="btn btn-warning">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
     <form id="up_info">
         <div class="form-row ">
             <div class="col-sm-2">
@@ -110,7 +129,7 @@
         </div>
     </div>
     <!-- here starts the option form for the user -->
-    <div id="options_screen" style="display:none;">
+    <div id="options_screen" >
         <label class="lbls">Choose how much to eat:</label>
         <select id="ball_num" class="custom-select">
             <option selected value="50">50</option>
@@ -147,7 +166,7 @@
         <br>
         <button id="btn_options" type="button" class="btn btn-success">Let's Go!</button>
     </div>
-    <div class="footer">All rights reserved. contact us in: zoharavr@post.bgu.ac.il or yosefmel@post.bgu.ac.il</div>
+    <div class="footer">&copy; All rights reserved. contact us in: zoharavr@post.bgu.ac.il or yosefmel@post.bgu.ac.il</div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

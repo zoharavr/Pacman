@@ -112,6 +112,7 @@ canvas{
     color:#e6e6e6!important;
     font-family:Palatino Linotype;
     font-size: 20px;
+    outline: none;
 }
 .input{
     display: inline-block;

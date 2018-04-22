@@ -45,15 +45,23 @@ userDB[0] = deafult;
 var lastmove;
 
 $(document).ready(function () {
+    hideShow();
+    context.canvas.width = window.innerWidth - 385;
+    context.canvas.height = window.innerHeight - 195;
+});
+function hideShow() {
     $("#welcome_screen").css("display", "block");
     $("#up_info").css("display", "none");
     $("#board").css("display", "none");
     $("#exampleModalCenter").modal('hide');
-    context.canvas.width = window.innerWidth - 385;
-    context.canvas.height = window.innerHeight - 195;
-    $("#sign_in").click(function () {
-        $("#form").toggle();
-    });
+    $("#sign_out").css("display", "none");
+    $("#options_screen").css("display", "none");
+}
+$("#sign_in").click(function () {
+    $("#form").toggle();
+});
+$("#login").click(function () {
+    $("#login_form").toggle();
 });
 function isEmail(email) {
     var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -92,12 +100,11 @@ $("#submit").click(function () {
     else {
         userDB.push(new User(user, pass, first, last, mail, bday));
         alert("your registration has been successfully completed");
+        $("#sign_out").css("display", "inline");
     }
 
 });
-$("#login").click(function () {
-    $("#login_form").toggle();
-});
+
 function validatePass(password) {
     if (/(?=.*[a-z])/.test(password)) {
         if (/\d/.test(password)) {
@@ -124,6 +131,7 @@ $("#confirm").click(function () {
         if (flag) {
             $("#welcome_screen").css("display", "none");
             $("#options_screen").css("display", "block");
+            $("#sign_out").css("display", "inline");
         }
         else {
             alert("incorrect user name or password");
@@ -131,6 +139,7 @@ $("#confirm").click(function () {
     }
 
 });
+//the option screen. let u choose number of balls,speed,monsters
 $("#btn_options").click(function () {
     $("#options_screen").css("display", "none");
     e = document.getElementById("monsterLevel");
@@ -144,6 +153,7 @@ $("#btn_options").click(function () {
     Start();
     Draw();
 });
+//redirects u to the option screen again
 $("#play_again").click(function () {
     $("#exampleModalCenter").modal('hide');
     $("#board").css("display", "none");
@@ -154,8 +164,14 @@ $("#play_again").click(function () {
         $("#add").append('<img id="l' + i + '" class="live" height="50" width="90" src="life.jpg">');
     }
 });
-
+$("#back_to").click(function () {
+    //  window.clearInterval();
+   location.reload();
+    hideShow();
+});
 function Start() {
+    $("#board").css("display", "block");
+    $("#welcome_screen").css("display", "none");
     $("#up_info").css("display", "block");
     $("#lblLive").val(lifes);
     $("#lblName").val(current_user);
@@ -334,9 +350,6 @@ function GetKeyPressed() {
 }
 var stop = $("#minutes").val();
 function Draw() {
-    //needs to move from here
-    $("#board").css("display", "block");
-    $("#welcome_screen").css("display", "none");
     //checks the time 
     if (time_elapsed > (stop) * 60) {
         if (score < 150) {
@@ -347,7 +360,6 @@ function Draw() {
             $("#end").text(" We have a Winner!!!");
             $("#exampleModalCenter").modal('show');
         }
-
         window.clearInterval(interval);
     }
     canvas.width = canvas.width; //clean board
@@ -423,7 +435,7 @@ function Draw() {
 
         }
     }
-  //  if (clock_alive) { drawClock(board, context); }
+    //  if (clock_alive) { drawClock(board, context); }
 
 }
 
