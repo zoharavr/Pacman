@@ -1,16 +1,17 @@
-const col=16; 
-const rows=8;
+const col = 16;
+const rows = 8;
 const HighValue = 50;
 var context = document.getElementById("canvas").getContext("2d");
 var monster_update1 = 0;
 var monster_update2 = 0;
 var monster_update3 = 0;
 var speed;
-var starStop=false;
+var ball_counter = 1;
+var starStop = false;
 var lastStarMove = 0;
 var lastState = new Array();
 var starCord = new Object();
-var clockCord= new Object();
+var clockCord = new Object();
 lastState[1] = 0;
 lastState[2] = 0;
 lastState[3] = 0;
@@ -105,7 +106,7 @@ $("#submit").click(function () {
     }
     else {
         userDB.push(new User(user, pass, first, last, mail, bday));
-        alert("your registration has been successfully completed.Please Login");
+        alert("your registration has been successfully completed. Please Login");
         $("#form").toggle();
         // $("#form").reset();
     }
@@ -160,10 +161,11 @@ $("#btn_options").click(function () {
     Start();
     Draw();
 });
-function initLives(){
-    for(var i=1;i<=lifes;i++){
+function initLives() {
+    $("#lblTime").css("color", "black");
+    for (var i = 1; i <= lifes; i++) {
         $("#l" + i).remove();
-    } 
+    }
     lifes = 3;
     for (var j = 1; j <= 3; j++) {
         $("#add").append('<img id="l' + j + '" class="live" height="50" width="90" src="pictures/life.png">');
@@ -177,13 +179,13 @@ $("#play_again").click(function () {
     $("#options_screen").css("display", "block");
     initLives();
 });
-$("#no_thanks").click(function(){
+$("#no_thanks").click(function () {
     hideShow();
     initLives();
 });
 $("#back_to").click(function () {
     location.reload();
-   // claerInputs();
+    // claerInputs();
     hideShow();
 });
 
@@ -193,7 +195,7 @@ function Start() {
     $("#up_info").css("display", "block");
     $("#lblLive").val(lifes);
     $("#lblName").val(current_user);
-    time_elapsed=0;
+    time_elapsed = 0;
     sound();
     board = new Array();
     shape = new Object();
@@ -219,8 +221,8 @@ function Start() {
     for (var i = 0; i < 15; i++) {
         board[i] = new Array();
         for (var j = 0; j < 7; j++) {
-            if ((i==2 && j==5) || (i==2 && j==6) || (i==10 && j==1) || (i==10 && j==2) || (i==10 && j==3) ) {
-                board[i][j]=4;
+            if ((i == 2 && j == 5) || (i == 2 && j == 6) || (i == 10 && j == 1) || (i == 10 && j == 2) || (i == 10 && j == 3)) {
+                board[i][j] = 4;
             }
             else {
                 var randomNum = Math.random();
@@ -299,7 +301,7 @@ function firstInit(board, shape) {
     board[clock_cell[0]][clock_cell[1]] = "clock";
     clockCord.i = clock_cell[0];
     clockCord.j = clock_cell[1];
-  
+
 }
 
 function findRandomEmptyCell(board) {
@@ -379,6 +381,14 @@ function GetKeyPressed() {
 }
 var stop = parseInt($("#minutes").val());
 function Draw() {
+    //finished all the fruits
+    if (checkFinish()) {
+        $("#end").text(" We have a Winner!!!");
+        $("#exampleModalCenter").modal('show');
+        ball_counter = 1;
+        window.clearInterval(interval);
+    }
+
     //checks the time 
     if (time_elapsed > (stop) * 60) {
         if (score < 150) {
@@ -461,7 +471,7 @@ function Draw() {
                 image.src = "pictures/clock.png";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
-            
+
             else if (board[i][j] == 9) {
                 var image = new Image();
                 image.src = "pictures/heart.png";
@@ -472,50 +482,61 @@ function Draw() {
     }
 
 }
-
+function checkFinish() {
+var flag=true;
+    for (var x = 0; x < 15; x++) {
+        for (var z = 0; z < 7; z++) {
+            if (board[x][z] == "red" || board[x][z] == "black" || board[x][z] == "#7FFF00" || board[x][z]==1) {
+                flag=false;
+            }
+        }
+    }
+    return flag;
+}
 function updateStarPosition() {
-    if (starCord.i==-1) {
+    if (starCord.i == -1) {
         return;
     }
-    if (board[starCord.i][starCord.j]==2) {
-        starCord.i=-1; 
-        return;} 
+    if (board[starCord.i][starCord.j] == 2) {
+        starCord.i = -1;
+        return;
+    }
     //return a number between 1 to 4  
     board[starCord.i][starCord.j] = lastStarMove;
     var move = Math.floor(Math.random() * 4);
     //up
     if (move == 0) {
-        if (starCord.j > 0 && (board[starCord.i][starCord.j - 1] == "red" 
-        || board[starCord.i][starCord.j - 1] == "black" 
-        || board[starCord.i][starCord.j - 1] == "#7FFF00" 
-        || board[starCord.i][starCord.j - 1] == 0)) {
+        if (starCord.j > 0 && (board[starCord.i][starCord.j - 1] == "red"
+            || board[starCord.i][starCord.j - 1] == "black"
+            || board[starCord.i][starCord.j - 1] == "#7FFF00"
+            || board[starCord.i][starCord.j - 1] == 0)) {
             starCord.j--;
         }
     }
     //down
     if (move == 1) {
-        if (starCord.j < 7  && (board[starCord.i][starCord.j + 1] == "red" 
-        || board[starCord.i][starCord.j + 1] == "black" 
-        || board[starCord.i][starCord.j + 1] == "#7FFF00" 
-        || board[starCord.i][starCord.j + 1] == 0)) {
+        if (starCord.j < 7 && (board[starCord.i][starCord.j + 1] == "red"
+            || board[starCord.i][starCord.j + 1] == "black"
+            || board[starCord.i][starCord.j + 1] == "#7FFF00"
+            || board[starCord.i][starCord.j + 1] == 0)) {
             starCord.j++;
         }
     }
     //right
     if (move == 2) {
-        if (starCord.i < 14 && (board[starCord.i+1][starCord.j] == "red" 
-        || board[starCord.i + 1][starCord.j ] == "black" 
-        || board[starCord.i + 1][starCord.j] == "#7FFF00" 
-        || board[starCord.i + 1][starCord.j] == 0)) {
+        if (starCord.i < 14 && (board[starCord.i + 1][starCord.j] == "red"
+            || board[starCord.i + 1][starCord.j] == "black"
+            || board[starCord.i + 1][starCord.j] == "#7FFF00"
+            || board[starCord.i + 1][starCord.j] == 0)) {
             starCord.i++;
         }
     }
     //left
     if (move == 3) {
-        if (starCord.i > 0 && (board[starCord.i-1][starCord.j] == "red" 
-        || board[starCord.i-1][starCord.j] == "black" 
-        || board[starCord.i-1][starCord.j] == "#7FFF00" 
-        || board[starCord.i-1][starCord.j] == 0)) {
+        if (starCord.i > 0 && (board[starCord.i - 1][starCord.j] == "red"
+            || board[starCord.i - 1][starCord.j] == "black"
+            || board[starCord.i - 1][starCord.j] == "#7FFF00"
+            || board[starCord.i - 1][starCord.j] == 0)) {
             starCord.i--;
         }
     }
@@ -615,7 +636,7 @@ function ghostUpdatePosition(monster, number) {
         && board[monster.i + 1][monster.j] != "monster1"
         && board[monster.i + 1][monster.j] != "monster2"
         && board[monster.i + 1][monster.j] != "monster3"
-        && board[monster.i+1][monster.j] != "star") {
+        && board[monster.i + 1][monster.j] != "star") {
         //future distance right
         var deltYR = Math.abs(shape.j - monster.j);
         var delXR = Math.abs(shape.i - (monster.i + 1));
@@ -715,20 +736,23 @@ function UpdatePosition() {
     }
     if (board[shape.i][shape.j] == "clock") {
         bonusSound.play();
-        stop = stop + 1 ;
-        $("#lblTime").css("color","green");
+        stop = stop + 1;
+        $("#lblTime").css("color", "green");
     }
     if (board[shape.i][shape.j] == "red") {
         eat_sound.play();
-        score += 15
+        score += 15;
+        ball_counter++;
     }
     if (board[shape.i][shape.j] == "black") {
         eat_sound.play();
         score += 5;
+        ball_counter++;
     }
     if (board[shape.i][shape.j] == "#7FFF00") {
         eat_sound.play();
         score += 25;
+        ball_counter++;
     }
     if (board[shape.i][shape.j] == "star") {
         bonusSound.play();
