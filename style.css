@@ -3,7 +3,7 @@ html{
     min-height: 100%;
 }
 body{
-	background-image: url(pacman_s.jpg);
+	background-image: url(pictures/pacman_s.jpg);
 	background-size: cover;
 	background-attachment: fixed;
 }

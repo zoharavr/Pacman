@@ -1,17 +1,23 @@
+const col=16; 
+const rows=8;
 const HighValue = 50;
 var context = document.getElementById("canvas").getContext("2d");
 var monster_update1 = 0;
 var monster_update2 = 0;
 var monster_update3 = 0;
 var speed;
+var starStop=false;
+var lastStarMove = 0;
 var lastState = new Array();
+var starCord = new Object();
+var clockCord= new Object();
 lastState[1] = 0;
 lastState[2] = 0;
 lastState[3] = 0;
 var e;
-var clock_alive = true;
-var eat_sound = new Audio('pacman_chomp.WAV');
-var dead_sound = new Audio('pacman_death.WAV');
+var eat_sound = new Audio('audio/pacman_chomp.WAV');
+var dead_sound = new Audio('audio/pacman_death.WAV');
+var bonusSound = new Audio('audio/pacman_eatfruit.WAV');
 var numberOfMonster;
 var shape;
 var monster1;
@@ -68,7 +74,7 @@ function isEmail(email) {
     return regex.test(email);
 }
 function sound() {
-    var audio = new Audio('pacman_beginning.WAV');
+    var audio = new Audio('audio/pacman_beginning.WAV');
     audio.play();
 }
 // make the sign in
@@ -101,7 +107,7 @@ $("#submit").click(function () {
         userDB.push(new User(user, pass, first, last, mail, bday));
         alert("your registration has been successfully completed.Please Login");
         $("#form").toggle();
-       // $("#form").reset();
+        // $("#form").reset();
     }
 
 });
@@ -147,35 +153,47 @@ $("#btn_options").click(function () {
     numberOfMonster = e.options[e.selectedIndex].value;
     var d = document.getElementById("speed");
     speed = d.options[d.selectedIndex].value;
-    $("body").css("background-image", "url(back.jpg)");
+    $("body").css("background-image", "url(pictures/back.jpg)");
     p_5 = ($("#ball_num").val() * 0.6);
     p_15 = ($("#ball_num").val() * 0.3);
     p_25 = ($("#ball_num").val() * 0.1);
     Start();
     Draw();
 });
+function initLives(){
+    for(var i=1;i<=lifes;i++){
+        $("#l" + i).remove();
+    } 
+    lifes = 3;
+    for (var j = 1; j <= 3; j++) {
+        $("#add").append('<img id="l' + j + '" class="live" height="50" width="90" src="pictures/life.png">');
+    }
+}
 //redirects u to the option screen again
 $("#play_again").click(function () {
     $("#exampleModalCenter").modal('hide');
     $("#board").css("display", "none");
     $("#up_info").css("display", "none");
     $("#options_screen").css("display", "block");
-    lifes = 3;
-    for (i = 1; i <= 3; i++) {
-        $("#add").append('<img id="l' + i + '" class="live" height="50" width="90" src="life.png">');
-    }
+    initLives();
+});
+$("#no_thanks").click(function(){
+    hideShow();
+    initLives();
 });
 $("#back_to").click(function () {
-    //  window.clearInterval();
-   location.reload();
+    location.reload();
+   // claerInputs();
     hideShow();
 });
+
 function Start() {
     $("#board").css("display", "block");
     $("#welcome_screen").css("display", "none");
     $("#up_info").css("display", "block");
     $("#lblLive").val(lifes);
     $("#lblName").val(current_user);
+    time_elapsed=0;
     sound();
     board = new Array();
     shape = new Object();
@@ -201,16 +219,18 @@ function Start() {
     for (var i = 0; i < 15; i++) {
         board[i] = new Array();
         for (var j = 0; j < 7; j++) {
-            var randomNum = Math.random();
-            if (randomNum <= 1.0 * food_remain / cnt) {
-                food_remain--;
-                board[i][j] = 1;
-            }
-            else if (randomNum < 1.0 * (pacman_remain + food_remain) / cnt) {
-                board[i][j] = 4;
+            if ((i==2 && j==5) || (i==2 && j==6) || (i==10 && j==1) || (i==10 && j==2) || (i==10 && j==3) ) {
+                board[i][j]=4;
             }
             else {
-                board[i][j] = 0;
+                var randomNum = Math.random();
+                if (randomNum <= 1.0 * food_remain / cnt) {
+                    food_remain--;
+                    board[i][j] = 1;
+                }
+                else {
+                    board[i][j] = 0;
+                }
             }
             cnt--;
             if (numberOfMonster >= 1) {
@@ -272,14 +292,21 @@ function firstInit(board, shape) {
     var life_cell = findRandomEmptyCell(board);
     board[life_cell[0]][life_cell[1]] = 9;
     var star_cell = findRandomEmptyCell(board);
-    board[star_cell[0]][star_cell[1]] = 5;
+    board[star_cell[0]][star_cell[1]] = "star";
+    starCord.i = star_cell[0];
+    starCord.j = star_cell[1];
+    var clock_cell = findRandomEmptyCell(board);
+    board[clock_cell[0]][clock_cell[1]] = "clock";
+    clockCord.i = clock_cell[0];
+    clockCord.j = clock_cell[1];
+  
 }
 
 function findRandomEmptyCell(board) {
-    var i = Math.floor((Math.random() * 10) + 1);
+    var i = Math.floor((Math.random() * 14) + 1);
     var j = Math.floor((Math.random() * 6) + 1);
     while (board[i][j] != 0) {
-        i = Math.floor((Math.random() * 10) + 1);
+        i = Math.floor((Math.random() * 14) + 1);
         j = Math.floor((Math.random() * 6) + 1);
     }
     return [i, j];
@@ -298,6 +325,7 @@ function main() {
         ghostUpdatePosition(monster2, 2);
         ghostUpdatePosition(monster3, 3);
     }
+    updateStarPosition();
     UpdatePosition();
     Draw();
 }
@@ -349,7 +377,7 @@ function GetKeyPressed() {
         return 4;
     }
 }
-var stop = $("#minutes").val();
+var stop = parseInt($("#minutes").val());
 function Draw() {
     //checks the time 
     if (time_elapsed > (stop) * 60) {
@@ -409,48 +437,93 @@ function Draw() {
             }
             else if (board[i][j] == "monster1") {
                 var image = new Image();
-                image.src = "monster1.PNG";
+                image.src = "pictures/monster1.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
             else if (board[i][j] == "monster2") {
                 var image = new Image();
 
-                image.src = "monster2.PNG";
+                image.src = "pictures/monster2.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
             else if (board[i][j] == "monster3") {
                 var image = new Image();
-                image.src = "monster3.PNG";
+                image.src = "pictures/monster3.PNG";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
-            else if (board[i][j] == 5) {
+            else if (board[i][j] == "star") {
                 var image = new Image();
-                image.src = "star.png";
+                image.src = "pictures/star.png";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
+            else if (board[i][j] == "clock") {
+                var image = new Image();
+                image.src = "pictures/clock.png";
+                context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
+            }
+            
             else if (board[i][j] == 9) {
                 var image = new Image();
-                image.src = "heart.png";
+                image.src = "pictures/heart.png";
                 context.drawImage(image, center.x - 30, center.y - 30, 50, 50);
             }
 
         }
     }
-    //  if (clock_alive) { drawClock(board, context); }
 
 }
 
-// function drawClock(board, cntx) {
-//     var center = new Object();
-//     var image = new Image();
-//     image.src = "clock.PNG";
-//     var cord = findRandomEmptyCell(board);
-//     center.x = cord[0] * 60 + 30;
-//     center.y = cord[1] * 60 + 30;
-//     board[cord[0]][cord[1]] = "clock";
-//     cntx.drawImage(image, center.x - 30, center.y - 30, 50, 50);
+function updateStarPosition() {
+    if (starCord.i==-1) {
+        return;
+    }
+    if (board[starCord.i][starCord.j]==2) {
+        starCord.i=-1; 
+        return;} 
+    //return a number between 1 to 4  
+    board[starCord.i][starCord.j] = lastStarMove;
+    var move = Math.floor(Math.random() * 4);
+    //up
+    if (move == 0) {
+        if (starCord.j > 0 && (board[starCord.i][starCord.j - 1] == "red" 
+        || board[starCord.i][starCord.j - 1] == "black" 
+        || board[starCord.i][starCord.j - 1] == "#7FFF00" 
+        || board[starCord.i][starCord.j - 1] == 0)) {
+            starCord.j--;
+        }
+    }
+    //down
+    if (move == 1) {
+        if (starCord.j < 7  && (board[starCord.i][starCord.j + 1] == "red" 
+        || board[starCord.i][starCord.j + 1] == "black" 
+        || board[starCord.i][starCord.j + 1] == "#7FFF00" 
+        || board[starCord.i][starCord.j + 1] == 0)) {
+            starCord.j++;
+        }
+    }
+    //right
+    if (move == 2) {
+        if (starCord.i < 14 && (board[starCord.i+1][starCord.j] == "red" 
+        || board[starCord.i + 1][starCord.j ] == "black" 
+        || board[starCord.i + 1][starCord.j] == "#7FFF00" 
+        || board[starCord.i + 1][starCord.j] == 0)) {
+            starCord.i++;
+        }
+    }
+    //left
+    if (move == 3) {
+        if (starCord.i > 0 && (board[starCord.i-1][starCord.j] == "red" 
+        || board[starCord.i-1][starCord.j] == "black" 
+        || board[starCord.i-1][starCord.j] == "#7FFF00" 
+        || board[starCord.i-1][starCord.j] == 0)) {
+            starCord.i--;
+        }
+    }
+    lastStarMove = board[starCord.i][starCord.j];
+    board[starCord.i][starCord.j] = "star";
 
-// }
+
+}
 function ghostUpdatePosition(monster, number) {
     var rounds;
     if (speed == "slow") {
@@ -496,7 +569,8 @@ function ghostUpdatePosition(monster, number) {
     if (monster.j > 0 && board[monster.i][monster.j - 1] != 4
         && board[monster.i][monster.j - 1] != "monster1"
         && board[monster.i][monster.j - 1] != "monster2"
-        && board[monster.i][monster.j - 1] != "monster3") {
+        && board[monster.i][monster.j - 1] != "monster3"
+        && board[monster.i][monster.j - 1] != "star") {
         //future distance up
         var deltYU = Math.abs(shape.j - (monster.j - 1));
         var delXU = Math.abs(shape.i - monster.i);
@@ -510,7 +584,8 @@ function ghostUpdatePosition(monster, number) {
     if (monster.j < 6 && board[monster.i][monster.j + 1] != 4
         && board[monster.i][monster.j + 1] != "monster1"
         && board[monster.i][monster.j + 1] != "monster2"
-        && board[monster.i][monster.j + 1] != "monster3") {
+        && board[monster.i][monster.j + 1] != "monster3"
+        && board[monster.i][monster.j + 1] != "star") {
         //future distance down
         var deltYD = Math.abs(shape.j - (monster.j + 1));
         var delXD = Math.abs(shape.i - monster.i);
@@ -524,7 +599,8 @@ function ghostUpdatePosition(monster, number) {
     if (monster.i > 0 && board[monster.i - 1][monster.j] != 4
         && board[monster.i - 1][monster.j] != "monster1"
         && board[monster.i - 1][monster.j] != "monster2"
-        && board[monster.i - 1][monster.j] != "monster3") {
+        && board[monster.i - 1][monster.j] != "monster3"
+        && board[monster.i - 1][monster.j] != "star") {
         //future distance leftz
         var deltYL = Math.abs(shape.j - monster.j);
         var delXL = Math.abs(shape.i - (monster.i - 1));
@@ -538,7 +614,8 @@ function ghostUpdatePosition(monster, number) {
     if (monster.i < 14 && board[monster.i + 1][monster.j] != 4
         && board[monster.i + 1][monster.j] != "monster1"
         && board[monster.i + 1][monster.j] != "monster2"
-        && board[monster.i + 1][monster.j] != "monster3") {
+        && board[monster.i + 1][monster.j] != "monster3"
+        && board[monster.i+1][monster.j] != "star") {
         //future distance right
         var deltYR = Math.abs(shape.j - monster.j);
         var delXR = Math.abs(shape.i - (monster.i + 1));
@@ -584,7 +661,6 @@ function ghostUpdatePosition(monster, number) {
                 lastState[3] = 0;
             }
             window.clearInterval(interval);
-            //  window.alert("loser!!!");
             $("#l" + lifes).remove();
             lifes--;
             if (lifes > 0) {
@@ -638,9 +714,9 @@ function UpdatePosition() {
         }
     }
     if (board[shape.i][shape.j] == "clock") {
-        clock_alive = false;
-        stop += 30;
-
+        bonusSound.play();
+        stop = stop + 1 ;
+        $("#lblTime").css("color","green");
     }
     if (board[shape.i][shape.j] == "red") {
         eat_sound.play();
@@ -653,6 +729,10 @@ function UpdatePosition() {
     if (board[shape.i][shape.j] == "#7FFF00") {
         eat_sound.play();
         score += 25;
+    }
+    if (board[shape.i][shape.j] == "star") {
+        bonusSound.play();
+        score += 50;
     }
     if (board[shape.i][shape.j] == "monster1" || board[shape.i][shape.j] == "monster2" || board[shape.i][shape.j] == "monster3") {
         dead_sound.play();
@@ -669,7 +749,6 @@ function UpdatePosition() {
             lastState[3] = 0;
         }
         window.clearInterval(interval);
-        window.alert("loser!!!");
         $("#l" + lifes).remove();
         //  $("#l" + lifes).css("display", "none");
         lifes--;
@@ -683,8 +762,9 @@ function UpdatePosition() {
         $("#lblLive").val(lifes);
     }
     if (board[shape.i][shape.j] == 9) {
+        bonusSound.play();
         lifes++;
-        $("#add").append('<img id="l' + lifes + '" class="live" height="50" width="90" src="life.png">');
+        $("#add").append('<img id="l' + lifes + '" class="live" height="50" width="90" src="pictures/life.png">');
         $("#lblLive").val(lifes);
     }
 
