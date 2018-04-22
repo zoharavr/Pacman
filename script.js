@@ -99,8 +99,9 @@ $("#submit").click(function () {
     }
     else {
         userDB.push(new User(user, pass, first, last, mail, bday));
-        alert("your registration has been successfully completed");
-        $("#sign_out").css("display", "inline");
+        alert("your registration has been successfully completed.Please Login");
+        $("#form").toggle();
+       // $("#form").reset();
     }
 
 });
@@ -161,7 +162,7 @@ $("#play_again").click(function () {
     $("#options_screen").css("display", "block");
     lifes = 3;
     for (i = 1; i <= 3; i++) {
-        $("#add").append('<img id="l' + i + '" class="live" height="50" width="90" src="life.jpg">');
+        $("#add").append('<img id="l' + i + '" class="live" height="50" width="90" src="life.png">');
     }
 });
 $("#back_to").click(function () {
@@ -683,7 +684,7 @@ function UpdatePosition() {
     }
     if (board[shape.i][shape.j] == 9) {
         lifes++;
-        $("#add").append('<img id="l' + lifes + '" class="live" height="50" width="90" src="life.jpg">');
+        $("#add").append('<img id="l' + lifes + '" class="live" height="50" width="90" src="life.png">');
         $("#lblLive").val(lifes);
     }
 
